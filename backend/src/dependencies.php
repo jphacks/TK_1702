@@ -1,14 +1,14 @@
 <?php
 // DIC configuration
 
-use Chat\LoggerProvider;
-use Chat\Slim\ErrorFormatter;
+use SlashApp\LoggerProvider;
+use SlashApp\Slim\ErrorFormatter;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 $container = $app->getContainer();
 
-Chat\ExceptionErrorHandler::register();
+SlashApp\ExceptionErrorHandler::register();
 
 (function ($c) {
 	LoggerProvider::init();
@@ -41,14 +41,14 @@ $container['phpErrorHandler'] = $container['errorHandler'] = function ($c) {
 
 $container['notFoundHandler'] = function ($c) {
 	return function (ServerRequestInterface $request, ResponseInterface $response) use ($c) {
-		$handler = new \Chat\Slim\NotFound();
+		$handler = new \SlashApp\Slim\NotFound();
 		return $handler($c->renderer, $request, $response);
 	};
 };
 
 $container['notAllowedHandler'] = function ($c) {
 	return function (ServerRequestInterface $request, ResponseInterface $response, $methods) use ($c) {
-		$handler = new \Chat\Slim\MethodNotAllowed();
+		$handler = new \SlashApp\Slim\MethodNotAllowed();
 		return $handler($c->renderer, $request, $response, $methods);
 	};
 };
