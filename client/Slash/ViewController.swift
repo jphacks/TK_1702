@@ -39,7 +39,6 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         
         if let videoLayer = self.setupVideo() {
             self.cameraLayer.layer.addSublayer(videoLayer)
-//            self.view.layer.addSublayer(videoLayer)
         }
         
         self.captureSession.startRunning()
@@ -49,6 +48,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         }
         
         self.locationManager.delegate = self
+        
+        print("Start updating Location")
         self.locationManager.startUpdatingLocation()
     }
     
@@ -86,7 +87,6 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         fileOutput.stopRecording()
     }
     
-
     func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
     }
     
