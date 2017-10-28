@@ -42,7 +42,13 @@
 	<table name="crime_danger_area">
 		<column name="danger_id" type="integer" required="true" autoIncrement="true" primaryKey="true"/>
 		<column name="area_id" type="integer" required="true"/>
+		<column name="date" type="timestamp" required="true"/>
+		<column name="reason" type="varchar" size="255" required="true"/>
 
+		<index>
+			<index-column name="area_id"/>
+			<index-column name="date"/>
+		</index>
 		<foreign-key foreignTable="area">
 			<reference local="area_id" foreign="area_id"/>
 		</foreign-key>
