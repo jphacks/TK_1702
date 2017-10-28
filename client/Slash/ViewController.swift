@@ -12,18 +12,19 @@ import AssetsLibrary
 import CoreLocation
 
 class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLLocationManagerDelegate  {
-    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        // TODO: send movie to server.
-    }
-    
-    var index = 2
-    
     let captureSession = AVCaptureSession()
     let videoDevice = AVCaptureDevice.default(for: AVMediaType.video)
     let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)
     let fileOutput = AVCaptureMovieFileOutput()
     
-    var locationManager: CLLocationManager!
+    var locationManager : CLLocationManager = {
+        let manager = CLLocationManager()
+        
+        // TODO: Fix for production
+        manager.distanceFilter = 1
+        
+        return manager
+    }()
     
     var stopButton : UIButton!
     var isRecording = false
@@ -31,42 +32,48 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLL
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let videoInput = try! AVCaptureDeviceInput(device: self.videoDevice!) as AVCaptureDeviceInput
-        self.captureSession.addInput(videoInput)
-        let audioInput = try! AVCaptureDeviceInput(device: self.audioDevice!)  as AVCaptureInput
-        self.captureSession.addInput(audioInput);
+        if let videoLayer = self.setupVideo() {
+            self.view.layer.addSublayer(videoLayer)
+        }
+        
+        self.setupButton()
+        
+        self.captureSession.startRunning()
+        
+        if CLLocationManager.authorizationStatus() != .authorizedAlways {
+            locationManager.requestAlwaysAuthorization()
+        }
+        
+        self.locationManager.startUpdatingLocation()
+    }
+    
+    func setupVideo() -> AVCaptureVideoPreviewLayer? {
+        do {
+            let videoInput = try AVCaptureDeviceInput(device: self.videoDevice!) as AVCaptureDeviceInput
+            self.captureSession.addInput(videoInput)
+            
+            let audioInput = try AVCaptureDeviceInput(device: self.audioDevice!)  as AVCaptureInput
+            self.captureSession.addInput(audioInput);
+        } catch {
+            return nil
+        }
         
         self.captureSession.addOutput(self.fileOutput)
         
-        let videoLayer : AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession) as AVCaptureVideoPreviewLayer
+        let videoLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+        
         videoLayer.frame = self.view.bounds
-        videoLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        self.view.layer.addSublayer(videoLayer)
+        videoLayer.videoGravity = .resizeAspectFill
         
-        self.setupButton()
-        self.captureSession.startRunning()
-        
-        if locationManager == nil {
-            locationManager = CLLocationManager()
-            if #available(iOS 8.0, *) {
-                // NSLocationWhenInUseUsageDescriptionに設定したメッセージでユーザに確認
-                locationManager.requestWhenInUseAuthorization()
-                // NSLocationAlwaysAndWhenInUseUsageDescriptionに設定したメッセージでユーザに確認
-                //locationManager.requestAlwaysAuthorization()
-            }
-        }
-        
-        locationManager.delegate = self
-        locationManager.startUpdatingLocation()
+        return videoLayer
     }
     
-    
-    func setupButton(){
+    func setupButton() {
         self.stopButton = UIButton(frame: CGRect(x:0,y:0,width:120,height:50))
         self.stopButton = UIButton(frame: CGRect(x:0,y:0,width:120,height:50))
-        self.stopButton.backgroundColor = UIColor.gray;
+        self.stopButton.backgroundColor = .gray;
         self.stopButton.layer.masksToBounds = true
-        self.stopButton.setTitle("stop", for: UIControlState.normal)
+        self.stopButton.setTitle("stop", for: .normal)
         self.stopButton.layer.cornerRadius = 20.0
 
         self.stopButton.layer.position = CGPoint(x: self.view.bounds.width/2 + 70, y:self.view.bounds.height-50)
@@ -74,10 +81,8 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLL
         self.stopButton.addTarget(self, action: #selector(onClickStopButton), for: .touchUpInside)
 
         self.view.addSubview(self.stopButton);
-        self.view.addSubview(self.stopButton);
 
         self.isRecording = true
-
     }
     
     @objc func onClickStopButton(sender: UIButton){
@@ -117,6 +122,8 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLL
         print("\(timestamp) \(latitude) \(longitude)")
     }
 
-
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        // TODO: send movie to server.
+    }
 }
 
