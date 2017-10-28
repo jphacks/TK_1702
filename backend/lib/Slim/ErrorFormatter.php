@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Chat\Slim;
+namespace SlashApp\Slim;
 
-use Chat\JsonRenderer;
-use Chat\LoggerProvider;
+use SlashApp\JsonRenderer;
+use SlashApp\LoggerProvider;
 use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Body;

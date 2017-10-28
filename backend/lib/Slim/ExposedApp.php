@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Chat\Slim;
+namespace SlashApp\Slim;
 
 
 use Psr\Http\Message\ServerRequestInterface;

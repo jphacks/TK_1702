@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Chat;
+namespace SlashApp;
 
 use Cascade\Cascade;
 use Monolog\Logger;

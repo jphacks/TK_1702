@@ -1,6 +1,6 @@
 {
     "name": "jphacks/TK_1702",
-    "description": "chat system",
+    "description": "",
     "keywords": [],
     "homepage": "http://example.com",
     "license": "MIT",
@@ -38,7 +38,7 @@
             "ORM\\": "db/generated-classes"
         },
         "psr-4": {
-            "Chat\\": "lib"
+            "SlashApp\\": "lib"
         },
         "files": [
             "src/config_loader.php",
@@ -47,7 +47,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Chat\\": "tests/"
+            "SlashApp\\": "tests/"
         }
     },
     "config": {
