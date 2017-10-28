@@ -23,9 +23,13 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         
         // TODO: Fix for production
         manager.distanceFilter = 1
+        manager.allowsBackgroundLocationUpdates = true
         
         return manager
     }()
+    
+    let avDevice = AVCaptureDevice.default(for: .video)
+    var flashTimer : Timer!
     
     @IBOutlet weak var cameraLayer: UIView!
     @IBOutlet weak var stopButton: UIButton!
@@ -37,12 +41,14 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         
         self.setupStyles()
         
+        print("Set up camera")
         if let videoLayer = self.setupVideo() {
             self.cameraLayer.layer.addSublayer(videoLayer)
         }
         
         self.captureSession.startRunning()
         
+        print("Set up location manager")
         if CLLocationManager.authorizationStatus() != .authorizedAlways {
             locationManager.requestAlwaysAuthorization()
         }
@@ -51,6 +57,10 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         
         print("Start updating Location")
         self.locationManager.startUpdatingLocation()
+        
+        print("Set timer")
+        self.flashTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(toggleFlash), userInfo: nil, repeats: true)
+        self.flashTimer.fire()
         
         // This is for debugging.
         let params = [
@@ -64,7 +74,6 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         ]
         
         Alamofire.request("https://private-anon-72073cf4f6-slashapp.apiary-mock.com/locations", parameters: params, headers:header)
-        
     }
     
     func setupVideo() -> AVCaptureVideoPreviewLayer? {
@@ -105,13 +114,19 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
     }
     
     func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
-        let assetsLib = ALAssetsLibrary()
-        assetsLib.writeVideoAtPath(toSavedPhotosAlbum: outputFileURL as URL!, completionBlock: nil)
+//        let assetsLib = ALAssetsLibrary()
+//        assetsLib.writeVideoAtPath(toSavedPhotosAlbum: outputFileURL as URL!, completionBlock: nil)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.flashTimer.invalidate()
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -120,6 +135,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
             "latitude" : location.coordinate.latitude,
             "longtitude" : location.coordinate.longitude
         ]
+        print(params)
         Alamofire.request("http://www.slashapp.ml/locations", parameters: params)
     }
 
@@ -127,6 +143,23 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         // TODO: send movie to server.
         
         self.sendMovie()
+    }
+    
+    @objc func toggleFlash(flg: Bool){
+
+        if self.avDevice!.hasTorch {
+            do {
+                try self.avDevice?.lockForConfiguration()
+                
+                self.avDevice?.torchMode = (self.avDevice?.torchMode == .on ? .off : .on)
+                
+                self.avDevice?.unlockForConfiguration()
+            } catch {
+                print("Torch could not be used")
+            }
+        } else {
+            print("Torch is not available")
+        }
     }
     
     private func sendMovie() {
