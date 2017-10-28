@@ -70,14 +70,17 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLL
         self.stopButton.layer.cornerRadius = 20.0
 
         self.stopButton.layer.position = CGPoint(x: self.view.bounds.width/2 + 70, y:self.view.bounds.height-50)
-        self.stopButton.addTarget(self, action: Selector(("onClickStopButton:")), for: .touchUpInside)
+
+        self.stopButton.addTarget(self, action: #selector(onClickStopButton), for: .touchUpInside)
 
         self.view.addSubview(self.stopButton);
         self.view.addSubview(self.stopButton);
-        
+
+        self.isRecording = true
+
     }
     
-    func onClickStopButton(sender: UIButton){
+    @objc func onClickStopButton(sender: UIButton){
         if self.isRecording {
             fileOutput.stopRecording()
             
