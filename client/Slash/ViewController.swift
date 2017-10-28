@@ -39,7 +39,6 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         
         if let videoLayer = self.setupVideo() {
             self.cameraLayer.layer.addSublayer(videoLayer)
-//            self.view.layer.addSublayer(videoLayer)
         }
         
         self.captureSession.startRunning()
@@ -50,20 +49,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         
         self.locationManager.delegate = self
         self.locationManager.startUpdatingLocation()
-        
-        // This is for debugging.
-        let params = [
-            "latitude" : 34.5,
-            "longtitude" : 124.8
-        ]
-        
-        let header = [
-            "Content-Type":"application/json",
-            "X-UDID": UIDevice.current.identifierForVendor!.uuidString
-        ]
-        
-        Alamofire.request("https://private-anon-72073cf4f6-slashapp.apiary-mock.com/locations", parameters: params, headers:header)
-        
+        self.locationManager.allowsBackgroundLocationUpdates = true
+        self.locationManager.pausesLocationUpdatesAutomatically = false
     }
     
     func setupVideo() -> AVCaptureVideoPreviewLayer? {
@@ -121,10 +108,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         ]
         Alamofire.request("http://www.slashapp.ml/locations", parameters: params)
     }
-
+    
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        // TODO: send movie to server.
-        
         self.sendMovie()
     }
     
