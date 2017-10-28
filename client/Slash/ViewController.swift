@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 import AssetsLibrary
 import CoreLocation
+import Alamofire
 
 class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLLocationManagerDelegate  {
     let captureSession = AVCaptureSession()
@@ -93,6 +94,17 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLL
             
             self.isRecording = false
             self.changeButtonColor(target: self.stopButton, color: UIColor.gray)
+        }
+        
+        // This is for debugging.
+        Alamofire.request("https://httpbin.org/get").response { response in
+            print("Request: \(String(describing: response.request))")
+            print("Response: \(String(describing: response.response) )")
+            print("Error: \(String(describing: response.error))")
+            
+            if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                print("Data: \(utf8Text)")
+            }
         }
     }
     
