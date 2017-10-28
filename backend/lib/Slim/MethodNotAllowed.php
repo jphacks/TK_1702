@@ -21,11 +21,7 @@ class MethodNotAllowed
 		$response = $response->withStatus($this->isOptionMethodRequested($request) ? 200 : 405)
 			->withHeader('Allow', implode(', ', $methods));
 
-		if (is_api_endpoint($request)) {
-			return $this->renderJson($request, $response, $methods);
-		} else {
-			return $this->renderHtml($renderer, $request, $response, $methods);
-		}
+		return $this->renderJson($request, $response, $methods);
 	}
 
 	protected function renderJson(
@@ -38,18 +34,8 @@ class MethodNotAllowed
 				->render($response, ['methods' => $methods]);
 		} else {
 			return JsonRenderer::create()
-				->renderAsError($response, 405, 'Method Not Allowed',
-					sprintf('%s is not allowed', $request->getMethod()), ['allowed_methods' => $methods]);
+				->renderAsError($response, 'Method Not Allowed', 405);
 		}
-	}
-
-	protected function renderHtml(
-		PhpRenderer $renderer,
-		ServerRequestInterface $request,
-		ResponseInterface $response,
-		$methods
-	): ResponseInterface {
-		return $renderer->render($response, 'method_not_allowed.phtml', ['allow' => implode(', ', $methods)]);
 	}
 
 	protected function isOptionMethodRequested(ServerRequestInterface $request)
