@@ -5,7 +5,7 @@
 	<behavior name="timestampable"/>
 
 	<table name="user">
-		<column name="user_id" type="integer" required="true" primaryKey="true"/>
+		<column name="user_id" type="integer" required="true" autoIncrement="true" primaryKey="true"/>
 		<column name="udid" type="varchar" size="255" required="true"/>
 
 		<unique>
