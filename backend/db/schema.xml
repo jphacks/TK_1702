@@ -6,5 +6,38 @@
 
 	<table name="user">
 		<column name="user_id" type="integer" required="true" primaryKey="true"/>
+		<column name="token" type="varchar" size="255" required="true"/>
+
+		<unique>
+			<unique-column name="token"/>
+		</unique>
+	</table>
+
+	<table name="location_history">
+		<column name="history_id" type="bigint" required="true" autoIncrement="true" primaryKey="true"/>
+		<column name="user_id" type="integer" required="true"/>
+		<column name="location" type="GEOMETRY" required="true"/>
+
+		<foreign-key foreignTable="user">
+			<reference local="user_id" foreign="user_id"/>
+		</foreign-key>
+	</table>
+
+	<table name="area">
+		<column name="area_id" type="integer" required="true" autoIncrement="true" primaryKey="true"/>
+		<column name="friendly_name" type="varchar" size="255" required="true"/>
+		<column name="area_polygon" type="GEOMETRY" required="true"/>
+
+		<index>
+			<index-column name="area_polygon"/>
+			<vendor type="mysql">
+				<parameter name="Index_type" value="SPATIAL"/>
+			</vendor>
+		</index>
+	</table>
+
+	<table name="danger_area">
+		<column name="danger_id" type="integer" required="true" autoIncrement="true" primaryKey="true"/>
+		<column name="area_id" type="integer" required="true"/>
 	</table>
 </database>
