@@ -13,7 +13,7 @@ propel:
       slashapp:
         adapter: mysql
         # classname: Propel\Runtime\Connection\DebugPDO
-        dsn: mysql:host=localhost;dbname=slashapp%env.CHAT_DB_SUFFIX%
+        dsn: mysql:host=localhost;dbname=slashapp
         user: slashapp
         password: abcd1234
         settings:
