@@ -1,19 +1,18 @@
 <?php
 return [
-    'settings' => [
-        'displayErrorDetails' => true, // set to false in production
-        'addContentLengthHeader' => false, // Allow the web server to send the content-length header
+	'settings' => [
+		'displayErrorDetails' => IS_DEVELOPMENT, // set to false in production
+		'addContentLengthHeader' => false, // Allow the web server to send the content-length header
+		'determineRouteBeforeAppMiddleware' => true, // required for validation
 
-        // Renderer settings
-        'renderer' => [
-            'template_path' => __DIR__ . '/../templates/',
-        ],
+		// Renderer settings
+		'renderer' => [
+			'template_path' => __DIR__ . '/../templates/',
+		],
 
-        // Monolog settings
-        'logger' => [
-            'name' => 'slim-app',
-            'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
-            'level' => \Monolog\Logger::DEBUG,
-        ],
-    ],
+		'validation' => [
+			'yaml_dir_path' => CH_BASE_DIR . '/generated-api-schema/',
+			'loose_mode' => false,
+		]
+	],
 ];

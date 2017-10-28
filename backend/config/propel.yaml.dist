@@ -1,0 +1,26 @@
+propel:
+  general:
+    project: slashapp
+  paths:
+    schemaDir: db
+    outputDir: db
+    phpDir: db/generated-classes
+    phpConfDir: db/generated-conf
+    migrationDir: db/generated-migrations
+    sqlDir: db/generated-sql
+  database:
+    connections:
+      slashapp:
+        adapter: mysql
+        # classname: Propel\Runtime\Connection\DebugPDO
+        dsn: mysql:host=localhost;dbname=slashapp%env.CHAT_DB_SUFFIX%
+        user: slashapp
+        password: abcd1234
+        settings:
+          charset: utf8mb4
+  runtime:
+    defaultConnection: slashapp
+    connections: [slashapp]
+  generator:
+    defaultConnection: slashapp
+    connections: [slashapp]

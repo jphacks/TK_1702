@@ -1,0 +1,10 @@
+handlers:
+  default_handler:
+    class: Monolog\Handler\StreamHandler
+    level: DEBUG
+    filename: '!unset'
+    stream: 'logs/test.log'
+    processors: [uid_processor, introspection_processor]
+loggers:
+  propel:
+    handlers: [default_handler]
