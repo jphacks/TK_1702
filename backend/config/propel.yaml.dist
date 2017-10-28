@@ -26,4 +26,4 @@ propel:
     connections: [slashapp]
   migrations:
     addVendorInfo: true
-    parserClass: GeoMysqlSchemaParser
+    parserClass: \SlashApp\Propel\GeoMysqlSchemaParser
