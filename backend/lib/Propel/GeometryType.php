@@ -47,4 +47,13 @@ class GeometryType
 		return $v;
 	}
 
+	public static function getBinaryPoint($lat, $long)
+	{
+		return self::getBinaryLocation(sprintf('Point(%f %f)', $long, $lat));
+	}
+
+	public static function mbrContainsWhereClause($lat, $long, $field)
+	{
+		return sprintf("MBRContains(%s, GeomFromText('Point(%f %f)'))", $field, $long, $lat);
+	}
 }
