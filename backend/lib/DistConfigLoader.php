@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace SlashApp;
 
+use Symfony\Component\Yaml\Yaml;
+
 class DistConfigLoader
 {
 	/** @var string */
@@ -35,11 +37,8 @@ class DistConfigLoader
 				return $this;
 			}
 		}
-		$result = yaml_parse_file($filepath, 0, $ndocs, [
-			'subst' => function ($value, $tag, $flags) {
-				return $this->handleSubst($value);
-			}
-		]);
+		$result = Yaml::parse(file_get_contents($filepath));
+		$result = $this->handleSubst($result);
 		if (!is_array($result)) {
 			throw new \RuntimeException('config file "' . $filepath . '" cannot load as yaml or array missing');
 		}
@@ -81,6 +80,15 @@ class DistConfigLoader
 
 	public function handleSubst($value)
 	{
-		return str_replace(array_keys($this->subst), array_values($this->subst), $value);
+		if (is_array($value)) {
+			foreach ($value as $k => $v) {
+				$value[$k] = $this->handleSubst($v);
+			}
+			return $value;
+		} else if (is_string($value)) {
+			return str_replace(array_keys($this->subst), array_values($this->subst), $value);
+		} else {
+			return $value;
+		}
 	}
 }
