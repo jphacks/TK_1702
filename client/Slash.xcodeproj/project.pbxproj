@@ -14,6 +14,7 @@
 		4648FA951FA462ED00A3E6D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4648FA941FA462ED00A3E6D3 /* Assets.xcassets */; };
 		4648FA981FA462ED00A3E6D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4648FA961FA462ED00A3E6D3 /* LaunchScreen.storyboard */; };
 		46DFCE381FA4BBC800D2C67D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 46DFCE371FA4BBC800D2C67D /* GoogleService-Info.plist */; };
+		C53CBC9C1FA4D9C500093953 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53CBC9B1FA4D9C500093953 /* CustomTableViewCell.swift */; };
 		CFD55B893782F28F14CF0888 /* Pods_Slash.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6527675E033F25DA50955035 /* Pods_Slash.framework */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +32,7 @@
 		46DFCE371FA4BBC800D2C67D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		60D827E9911F3E9343356AEA /* Pods-Slash.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Slash.release.xcconfig"; path = "Pods/Target Support Files/Pods-Slash/Pods-Slash.release.xcconfig"; sourceTree = "<group>"; };
 		6527675E033F25DA50955035 /* Pods_Slash.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Slash.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C53CBC9B1FA4D9C500093953 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +84,7 @@
 				4648FA961FA462ED00A3E6D3 /* LaunchScreen.storyboard */,
 				4648FA991FA462ED00A3E6D3 /* Info.plist */,
 				464679531FA49EF400048685 /* ListViewController.swift */,
+				C53CBC9B1FA4D9C500093953 /* CustomTableViewCell.swift */,
 				46DFCE371FA4BBC800D2C67D /* GoogleService-Info.plist */,
 			);
 			path = Slash;
@@ -230,6 +233,7 @@
 			files = (
 				4648FA901FA462ED00A3E6D3 /* ViewController.swift in Sources */,
 				4648FA8E1FA462ED00A3E6D3 /* AppDelegate.swift in Sources */,
+				C53CBC9C1FA4D9C500093953 /* CustomTableViewCell.swift in Sources */,
 				464679541FA49EF400048685 /* ListViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
