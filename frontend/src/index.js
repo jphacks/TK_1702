@@ -5,11 +5,14 @@ class App extends React.Component {
   render() {
     return (
      <div style={{textAlign: 'center'}}>
-        <h1>Hello World</h1>
-      </div>);
+       <h1>Hello World!!</h1>
+     </div>);
   }
 }
 
 console.log('hello');
 
-ReactDOM.render(<App />, document.getElementById('root'));
+document.addEventListener('DOMContentLoaded', () => {
+  const element = document.getElementById('App');
+  ReactDOM.render(<App />, element);
+});
