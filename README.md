@@ -1,15 +1,13 @@
-# サンプル（プロダクト名）
-
-[![Product Name](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https://www.youtube.com/channel/UC4PtjOfZTbVp9DwtJv82Lzg)
+# Companion - I'll protect YOU. -
 
 ## 製品概要
-### X Tech（X → 今回皆さんが選定した好きな言葉に書き換えてください）
+### Security X Tech 
 
 ### 背景（製品開発のきっかけ、課題等）
-ここに
-- こんかいのプロダクトの開発に至った背景
-- 着目した顧客・顧客の課題・現状
-を記入してください
+- 世界の大都市のうち、安全だと言われている東京ですが実に2000件以上の性犯罪が毎年発生しており、屋外での
+強姦、強制わいせつなどの犯罪は主に午後11時から明け方5時に発生しています(?)
+![犯罪の時間帯別発生件数](http://www.keishicho.metro.tokyo.jp/kurashi/higai/koramu2/koramu8.images/28grf_1.png)
+
 
 ### 製品説明（具体的な製品の説明）
 こちらに製品の概要・特徴について説明を記載してください。
@@ -33,7 +31,6 @@
 ### 活用した技術
 #### API・データ
 今回スポンサーから提供されたAPI、製品などの外部技術があれば記述をして下さい。
-
 * 
 * 
 * 
@@ -43,8 +40,7 @@
 * 
 
 #### デバイス
-* 
-* 
+* iPhone
 
 ### 研究内容・事前開発プロダクト（任意）
 ご自身やチームの研究内容や、事前に持ち込みをしたプロダクトがある場合は、こちらに実績なども含め記載をして下さい。
