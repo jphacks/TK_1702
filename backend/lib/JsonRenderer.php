@@ -50,10 +50,18 @@ class JsonRenderer
 	 * @param string $message
 	 * @return ResponseInterface
 	 */
-	public function renderAsError(ResponseInterface $response, string $message, int $status_code): ResponseInterface
+	public function renderAsError(
+		ResponseInterface $response,
+		string $message,
+		int $status_code,
+		array $extra = null
+	): ResponseInterface
 	{
 		$response = $response->withStatus($status_code);
 		$data = ['error' => $message];
+		if ($extra !== null && IS_DEVELOPMENT) {
+			$data['extra'] = $extra;
+		}
 		$body = new Body(fopen('php://temp', 'r+'));
 		$body->write(json_encode($data));
 		return $response
