@@ -51,6 +51,20 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         
         print("Start updating Location")
         self.locationManager.startUpdatingLocation()
+        
+        // This is for debugging.
+        let params = [
+            "latitude" : 34.5,
+            "longtitude" : 124.8
+        ]
+        
+        let header = [
+            "Content-Type":"application/json",
+            "X-UDID": UIDevice.current.identifierForVendor!.uuidString
+        ]
+        
+        Alamofire.request("https://private-anon-72073cf4f6-slashapp.apiary-mock.com/locations", parameters: params, headers:header)
+        
     }
     
     func setupVideo() -> AVCaptureVideoPreviewLayer? {
@@ -86,7 +100,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         
         fileOutput.stopRecording()
     }
-    
+
     func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
     }
     
@@ -102,13 +116,11 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location = locations.last!
-        let latitude = String(format: "%+.06f", location.coordinate.latitude)
-        let longitude = String(format: "%+.06f", location.coordinate.longitude)
-        let df = DateFormatter()
-        df.dateFormat = "yyyy/MM/dd HH:mm:ss"
-        let timestamp = df.string(from: location.timestamp)
-        
-        print("\(timestamp) \(latitude) \(longitude)")
+        let params = [
+            "latitude" : location.coordinate.latitude,
+            "longtitude" : location.coordinate.longitude
+        ]
+        Alamofire.request("http://www.slashapp.ml/locations", parameters: params)
     }
 
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
