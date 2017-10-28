@@ -45,6 +45,7 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLL
             locationManager.requestAlwaysAuthorization()
         }
         
+        self.locationManager.delegate = self
         self.locationManager.startUpdatingLocation()
     }
     
