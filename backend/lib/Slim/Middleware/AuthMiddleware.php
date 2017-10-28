@@ -22,7 +22,7 @@ class AuthMiddleware
 	): ResponseInterface {
 		$udid = $request->getHeaderLine('X-UDID');
 		$route = $this->getRoute($request);
-		$auth_skipped = $route && $route->getArgument(self::ROUTE_ARG_SKIP);
+		$auth_skipped = !$route || $route->getArgument(self::ROUTE_ARG_SKIP);
 
 		if (!$auth_skipped) {
 			if (empty($udid)) {
