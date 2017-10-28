@@ -1,0 +1,20 @@
+formatters:
+  default_formatter:
+    class: Monolog\Formatter\LineFormatter
+handlers:
+  default_handler:
+    class: Monolog\Handler\RotatingFileHandler
+    level: INFO
+    formatter: default_formatter
+    processors: [uid_processor, introspection_processor, web_processor]
+    filename: '../logs/app.log'
+processors:
+  uid_processor:
+    class: Monolog\Processor\UidProcessor
+  web_processor:
+    class: Monolog\Processor\WebProcessor
+  introspection_processor:
+    class: Monolog\Processor\IntrospectionProcessor
+loggers:
+  __base__:
+    handlers: [default_handler]

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="slashapp" defaultIdMethod="native" namespace="ORM" identifierQuoting="true"
+		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		  xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/propelorm/Propel2/master/resources/xsd/database.xsd">
+	<behavior name="timestampable"/>
+
+	<table name="user">
+		<column name="user_id" type="integer" required="true" primaryKey="true"/>
+	</table>
+</database>

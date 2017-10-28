@@ -9,13 +9,19 @@ if (PHP_SAPI == 'cli-server') {
     }
 }
 
-require __DIR__ . '/../vendor/autoload.php';
+define('CH_BASE_DIR', __DIR__ . '/..');
+define('CH_WEBROOT_PATH', CH_BASE_DIR . '/public');
+define('CH_TEMPLATE_PATH', CH_BASE_DIR . '/templates');
 
-session_start();
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// this locks file and make requests all sequential?
+//session_start();
 
 // Instantiate the app
 $settings = require __DIR__ . '/../src/settings.php';
-$app = new \Slim\App($settings);
+$app = new \Chat\Slim\ExposedApp($settings);
 
 // Set up dependencies
 require __DIR__ . '/../src/dependencies.php';
