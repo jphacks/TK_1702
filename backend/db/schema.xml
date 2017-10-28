@@ -6,10 +6,10 @@
 
 	<table name="user">
 		<column name="user_id" type="integer" required="true" primaryKey="true"/>
-		<column name="token" type="varchar" size="255" required="true"/>
+		<column name="udid" type="varchar" size="255" required="true"/>
 
 		<unique>
-			<unique-column name="token"/>
+			<unique-column name="udid"/>
 		</unique>
 	</table>
 
@@ -29,6 +29,9 @@
 		<column name="area_polygon" type="GEOMETRY" required="true"/>
 
 		<index>
+			<index-column name="friendly_name"/>
+		</index>
+		<index>
 			<index-column name="area_polygon"/>
 			<vendor type="mysql">
 				<parameter name="Index_type" value="SPATIAL"/>
@@ -36,8 +39,12 @@
 		</index>
 	</table>
 
-	<table name="danger_area">
+	<table name="crime_danger_area">
 		<column name="danger_id" type="integer" required="true" autoIncrement="true" primaryKey="true"/>
 		<column name="area_id" type="integer" required="true"/>
+
+		<foreign-key foreignTable="area">
+			<reference local="area_id" foreign="area_id"/>
+		</foreign-key>
 	</table>
 </database>
