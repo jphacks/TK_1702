@@ -13,6 +13,7 @@
 		4648FA931FA462ED00A3E6D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4648FA911FA462ED00A3E6D3 /* Main.storyboard */; };
 		4648FA951FA462ED00A3E6D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4648FA941FA462ED00A3E6D3 /* Assets.xcassets */; };
 		4648FA981FA462ED00A3E6D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4648FA961FA462ED00A3E6D3 /* LaunchScreen.storyboard */; };
+		46DFCE381FA4BBC800D2C67D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 46DFCE371FA4BBC800D2C67D /* GoogleService-Info.plist */; };
 		CFD55B893782F28F14CF0888 /* Pods_Slash.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6527675E033F25DA50955035 /* Pods_Slash.framework */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +27,8 @@
 		4648FA941FA462ED00A3E6D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4648FA971FA462ED00A3E6D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4648FA991FA462ED00A3E6D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		46DFCE361FA4BA6C00D2C67D /* Slash.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Slash.entitlements; sourceTree = "<group>"; };
+		46DFCE371FA4BBC800D2C67D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		60D827E9911F3E9343356AEA /* Pods-Slash.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Slash.release.xcconfig"; path = "Pods/Target Support Files/Pods-Slash/Pods-Slash.release.xcconfig"; sourceTree = "<group>"; };
 		6527675E033F25DA50955035 /* Pods_Slash.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Slash.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -71,6 +74,7 @@
 		4648FA8C1FA462ED00A3E6D3 /* Slash */ = {
 			isa = PBXGroup;
 			children = (
+				46DFCE361FA4BA6C00D2C67D /* Slash.entitlements */,
 				4648FA8D1FA462ED00A3E6D3 /* AppDelegate.swift */,
 				4648FA8F1FA462ED00A3E6D3 /* ViewController.swift */,
 				4648FA911FA462ED00A3E6D3 /* Main.storyboard */,
@@ -78,6 +82,7 @@
 				4648FA961FA462ED00A3E6D3 /* LaunchScreen.storyboard */,
 				4648FA991FA462ED00A3E6D3 /* Info.plist */,
 				464679531FA49EF400048685 /* ListViewController.swift */,
+				46DFCE371FA4BBC800D2C67D /* GoogleService-Info.plist */,
 			);
 			path = Slash;
 			sourceTree = "<group>";
@@ -131,6 +136,9 @@
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
+							com.apple.Push = {
+								enabled = 1;
+							};
 						};
 					};
 				};
@@ -159,6 +167,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4648FA981FA462ED00A3E6D3 /* LaunchScreen.storyboard in Resources */,
+				46DFCE381FA4BBC800D2C67D /* GoogleService-Info.plist in Resources */,
 				4648FA951FA462ED00A3E6D3 /* Assets.xcassets in Resources */,
 				4648FA931FA462ED00A3E6D3 /* Main.storyboard in Resources */,
 			);
@@ -359,6 +368,7 @@
 			baseConfigurationReference = 416B765154EA6F7F8244E9FF /* Pods-Slash.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Slash/Slash.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8V93M8FSEZ;
 				INFOPLIST_FILE = Slash/Info.plist;
@@ -375,6 +385,7 @@
 			baseConfigurationReference = 60D827E9911F3E9343356AEA /* Pods-Slash.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Slash/Slash.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8V93M8FSEZ;
 				INFOPLIST_FILE = Slash/Info.plist;

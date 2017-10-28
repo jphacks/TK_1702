@@ -11,8 +11,9 @@ import AVFoundation
 import AssetsLibrary
 import CoreLocation
 import Alamofire
+import UserNotifications
 
-class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CLLocationManagerDelegate  {
+class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CLLocationManagerDelegate {
     let captureSession = AVCaptureSession()
     let videoDevice = AVCaptureDevice.default(for: AVMediaType.video)
     let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)
@@ -23,9 +24,13 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         
         // TODO: Fix for production
         manager.distanceFilter = 1
+        manager.allowsBackgroundLocationUpdates = true
         
         return manager
     }()
+    
+    let avDevice = AVCaptureDevice.default(for: .video)
+    var flashTimer : Timer!
     
     @IBOutlet weak var cameraLayer: UIView!
     @IBOutlet weak var stopButton: UIButton!
@@ -37,20 +42,42 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         
         self.setupStyles()
         
+        print("Set up camera")
         if let videoLayer = self.setupVideo() {
             self.cameraLayer.layer.addSublayer(videoLayer)
         }
         
         self.captureSession.startRunning()
         
+        print("Set up location manager")
         if CLLocationManager.authorizationStatus() != .authorizedAlways {
             locationManager.requestAlwaysAuthorization()
         }
         
         self.locationManager.delegate = self
+        
+        print("Start updating Location")
         self.locationManager.startUpdatingLocation()
-        self.locationManager.allowsBackgroundLocationUpdates = true
-        self.locationManager.pausesLocationUpdatesAutomatically = false
+        
+        print("Set timer")
+        self.flashTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(toggleFlash), userInfo: nil, repeats: true)
+        self.flashTimer.fire()
+                
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: Notification.Name.UIApplicationWillResignActive, object: nil)
+        
+        // This is for debugging.
+        let params = [
+            "latitude" : 34.5,
+            "longtitude" : 124.8
+        ]
+        
+        let header = [
+            "Content-Type":"application/json",
+            "X-UDID": UIDevice.current.identifierForVendor!.uuidString
+        ]
+        
+        Alamofire.request("https://private-anon-72073cf4f6-slashapp.apiary-mock.com/locations", parameters: params, headers:header)
     }
     
     func setupVideo() -> AVCaptureVideoPreviewLayer? {
@@ -91,13 +118,27 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
     }
     
     func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
-        let assetsLib = ALAssetsLibrary()
-        assetsLib.writeVideoAtPath(toSavedPhotosAlbum: outputFileURL as URL!, completionBlock: nil)
+//        let assetsLib = ALAssetsLibrary()
+//        assetsLib.writeVideoAtPath(toSavedPhotosAlbum: outputFileURL as URL!, completionBlock: nil)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.flashTimer.invalidate()
+    }
+    
+    @objc func appMovedToBackground() {
+        self.flashTimer.invalidate()
+    }
+    
+    func applicationDidEnterBackground(application: UIApplication) {
+        
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -106,11 +147,28 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
             "latitude" : location.coordinate.latitude,
             "longtitude" : location.coordinate.longitude
         ]
+        print(params)
         Alamofire.request("http://www.slashapp.ml/locations", parameters: params)
     }
     
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         self.sendMovie()
+    }
+    
+    @objc func toggleFlash(flg: Bool) {
+        if self.avDevice!.hasTorch {
+            do {
+                try self.avDevice?.lockForConfiguration()
+                
+                self.avDevice?.torchMode = (self.avDevice?.torchMode == .on ? .off : .on)
+                
+                self.avDevice?.unlockForConfiguration()
+            } catch {
+                print("Torch could not be used")
+            }
+        } else {
+            print("Torch is not available")
+        }
     }
     
     private func sendMovie() {
