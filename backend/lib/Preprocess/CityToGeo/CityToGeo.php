@@ -6,6 +6,7 @@ namespace SlashApp\Preprocess\CityToGeo;
 
 use ORM\Area;
 use ORM\AreaQuery;
+use SlashApp\Preprocess\CityNameSafeNormalizer;
 use SlashApp\Propel\GeometryType;
 
 class CityToGeo
@@ -28,13 +29,12 @@ class CityToGeo
 						continue;
 					}
 
-					$friendly = $ken . $city . $sub;
+					$friendly = CityNameSafeNormalizer::normalize($ken . $city . $sub);
 					$latlng = explode(' ', $pos);
 					$edge = [];
 					for ($i = 0; $i < count($latlng); $i += 2) {
 						$edge[] = sprintf('%s %s', $latlng[$i + 1], $latlng[$i]);
 					}
-					var_dump($friendly);
 					AreaQuery::create()
 						->filterByFriendlyName($friendly)
 						->delete();
