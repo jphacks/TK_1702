@@ -1,14 +1,12 @@
 <?php
 
-use Slim\Http\Request;
-use Slim\Http\Response;
+$rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(__DIR__ . '/routes/'));
 
-// Routes
-
-$app->get('/[{name}]', function (Request $request, Response $response, array $args) {
-    // Sample log message
-    $this->logger->info("Slim-Skeleton '/' route");
-
-    // Render index view
-    return $this->renderer->render($response, 'index.phtml', $args);
-});
+foreach ($rii as $file) {
+	if ($file->isDir()) {
+		continue;
+	}
+	if (ends_with($file->getPathname(), '.php')) {
+		require $file->getPathname();
+	}
+}
