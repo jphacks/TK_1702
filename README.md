@@ -32,7 +32,8 @@
 #### API・データ
 今回スポンサーから提供されたAPI、製品などの外部技術があれば記述をして下さい。
 
-* 東京オープンデータカタログサイト http://opendata-catalogue.metro.tokyo.jp/dataset/t000002d0000000017
+* 東京オープンデータカタログサイト http://opendata-catalogue.metro.tokyo.jp/dataset/t000002d0000000017  
+「町丁字別犯罪情報　平成29年分（月ごとの数値）」、東京都・東京都青少年・治安対策本部、クリエイティブ・コモンズ・ライセンス　表示4.0国際（https://creativecommons.org/licenses/by/4.0/deed.ja）
 * 東京都文京区の丁目境界データ http://e-stat.go.jp/SG2/eStatGIS/page/download.html
 
 #### フレームワーク・ライブラリ・モジュール
