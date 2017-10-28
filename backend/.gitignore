@@ -1,3 +1,13 @@
+*.log
+*.tmp
+/bower_components/
+/config/*.yaml
+/config/env.php
+/db/generated-classes/ORM/Base/
+/db/generated-classes/ORM/Map/
+/db/generated-conf/
+/db/generated-migrations/
+/db/generated-sql/
+/generated-api-schema/
+/node_modules/
 /vendor/
-/logs/*
-!/logs/README.md
