@@ -49,3 +49,4 @@ $container['notAllowedHandler'] = function ($c) {
 		return $handler($c->renderer, $request, $response, $methods);
 	};
 };
+
