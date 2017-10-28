@@ -49,17 +49,19 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLL
     
     func setupVideo() -> AVCaptureVideoPreviewLayer? {
         do {
-            let videoInput = try AVCaptureDeviceInput(device: self.videoDevice!) as AVCaptureDeviceInput
-            self.captureSession.addInput(videoInput)
-            
-            let audioInput = try AVCaptureDeviceInput(device: self.audioDevice!)  as AVCaptureInput
-            self.captureSession.addInput(audioInput);
+            if let videoDevice = self.videoDevice {
+                let videoInput = try AVCaptureDeviceInput(device: videoDevice) as AVCaptureDeviceInput
+                self.captureSession.addInput(videoInput)
+            }
+            if let audioDevice = self.audioDevice {
+                let audioInput = try AVCaptureDeviceInput(device: audioDevice)  as AVCaptureInput
+                self.captureSession.addInput(audioInput);
+            }
         } catch {
             return nil
         }
         
         self.captureSession.addOutput(self.fileOutput)
-        
         let videoLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
         
         videoLayer.frame = self.view.bounds
