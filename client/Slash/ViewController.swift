@@ -12,7 +12,7 @@ import AssetsLibrary
 import CoreLocation
 import Alamofire
 
-class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLLocationManagerDelegate  {
+class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CLLocationManagerDelegate  {
     let captureSession = AVCaptureSession()
     let videoDevice = AVCaptureDevice.default(for: AVMediaType.video)
     let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)
@@ -27,17 +27,20 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLL
         return manager
     }()
     
-    var stopButton : UIButton!
+    @IBOutlet weak var cameraLayer: UIView!
+    @IBOutlet weak var stopButton: UIButton!
+    
     var isRecording = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let videoLayer = self.setupVideo() {
-            self.view.layer.addSublayer(videoLayer)
-        }
+        self.setupStyles()
         
-        self.setupButton()
+        if let videoLayer = self.setupVideo() {
+            self.cameraLayer.layer.addSublayer(videoLayer)
+//            self.view.layer.addSublayer(videoLayer)
+        }
         
         self.captureSession.startRunning()
         
@@ -86,36 +89,17 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLL
         return videoLayer
     }
     
-    func setupButton() {
-        self.stopButton = UIButton(frame: CGRect(x:0,y:0,width:120,height:50))
-        self.stopButton = UIButton(frame: CGRect(x:0,y:0,width:120,height:50))
-        self.stopButton.backgroundColor = .gray;
+    func setupStyles() {
         self.stopButton.layer.masksToBounds = true
-        self.stopButton.setTitle("stop", for: .normal)
         self.stopButton.layer.cornerRadius = 20.0
-
-        self.stopButton.layer.position = CGPoint(x: self.view.bounds.width/2 + 70, y:self.view.bounds.height-50)
-
-        self.stopButton.addTarget(self, action: #selector(onClickStopButton), for: .touchUpInside)
-
-        self.view.addSubview(self.stopButton);
-
-        self.isRecording = true
     }
     
-    @objc func onClickStopButton(sender: UIButton){
-        if self.isRecording {
-            fileOutput.stopRecording()
-            
-            self.isRecording = false
-            self.changeButtonColor(target: self.stopButton, color: UIColor.gray)
-        }
+    @IBAction func onClickStopButton(_ sender: Any) {
+        print("Finish capturing")
+        
+        fileOutput.stopRecording()
     }
-    
-    func changeButtonColor(target: UIButton, color: UIColor){
-        target.backgroundColor = color
-    }
-    
+
     func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
     }
     
@@ -140,6 +124,21 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLL
 
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         // TODO: send movie to server.
+        
+        self.sendMovie()
+    }
+    
+    private func sendMovie() {
+        // This is for debugging.
+        Alamofire.request("https://httpbin.org/get").response { response in
+            print("Request: \(String(describing: response.request))")
+            print("Response: \(String(describing: response.response) )")
+            print("Error: \(String(describing: response.error))")
+            
+            if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                print("Data: \(utf8Text)")
+            }
+        }
     }
 }
 
