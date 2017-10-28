@@ -32,7 +32,6 @@ class GeometryType
 		// locationをNULL-ableにすれば、postInsertの中でupdateを投げて、もできると思うのですが、
 		// spatial indexはnot nullを強要するので、残念です。
 		if (is_string($v)) {
-			var_dump($v);
 			$stmt = Propel::getConnection()->prepare('SELECT ST_GeomFromText(:wkt, :srid) AS a');
 			$stmt->bindValue(':wkt', $v, \PDO::PARAM_STR);
 			$stmt->bindValue(':srid', self::SRID, \PDO::PARAM_INT);
