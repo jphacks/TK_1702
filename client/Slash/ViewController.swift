@@ -9,8 +9,9 @@
 import UIKit
 import AVFoundation
 import AssetsLibrary
+import CoreLocation
 
-class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate  {
+class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLLocationManagerDelegate  {
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         // TODO: send movie to server.
     }
@@ -21,6 +22,8 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate  {
     let videoDevice = AVCaptureDevice.default(for: AVMediaType.video)
     let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)
     let fileOutput = AVCaptureMovieFileOutput()
+    
+    var locationManager: CLLocationManager!
     
     var stopButton : UIButton!
     var isRecording = false
@@ -42,7 +45,21 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate  {
         
         self.setupButton()
         self.captureSession.startRunning()
+        
+        if locationManager == nil {
+            locationManager = CLLocationManager()
+            if #available(iOS 8.0, *) {
+                // NSLocationWhenInUseUsageDescriptionに設定したメッセージでユーザに確認
+                locationManager.requestWhenInUseAuthorization()
+                // NSLocationAlwaysAndWhenInUseUsageDescriptionに設定したメッセージでユーザに確認
+                //locationManager.requestAlwaysAuthorization()
+            }
+        }
+        
+        locationManager.delegate = self
+        locationManager.startUpdatingLocation()
     }
+    
     
     func setupButton(){
         self.stopButton = UIButton(frame: CGRect(x:0,y:0,width:120,height:50))
@@ -53,10 +70,11 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate  {
         self.stopButton.layer.cornerRadius = 20.0
 
         self.stopButton.layer.position = CGPoint(x: self.view.bounds.width/2 + 70, y:self.view.bounds.height-50)
-        self.stopButton.addTarget(self, action: Selector("onClickStopButton:"), for: .touchUpInside)
+        self.stopButton.addTarget(self, action: Selector(("onClickStopButton:")), for: .touchUpInside)
 
         self.view.addSubview(self.stopButton);
         self.view.addSubview(self.stopButton);
+        
     }
     
     func onClickStopButton(sender: UIButton){
@@ -80,12 +98,19 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate  {
         assetsLib.writeVideoAtPath(toSavedPhotosAlbum: outputFileURL as URL!, completionBlock: nil)
     }
     
-    
-    
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let location = locations.last!
+        let latitude = String(format: "%+.06f", location.coordinate.latitude)
+        let longitude = String(format: "%+.06f", location.coordinate.longitude)
+        let df = DateFormatter()
+        df.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        let timestamp = df.string(from: location.timestamp)
+        print("\(timestamp) \(latitude) \(longitude)")
     }
 
 
