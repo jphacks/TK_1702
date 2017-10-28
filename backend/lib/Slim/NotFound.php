@@ -19,11 +19,7 @@ class NotFound
 	): ResponseInterface {
 		$response = $response->withStatus(404);
 
-		if (is_api_endpoint($request)) {
-			return $this->renderJson($request, $response);
-		} else {
-			return $this->renderHtml($renderer, $request, $response);
-		}
+		return $this->renderJson($request, $response);
 	}
 
 	protected function renderJson(
@@ -31,14 +27,6 @@ class NotFound
 		ResponseInterface $response
 	): ResponseInterface {
 		return JsonRenderer::create()
-			->renderAsError($response, 404, 'Not Found');
-	}
-
-	protected function renderHtml(
-		PhpRenderer $renderer,
-		ServerRequestInterface $request,
-		ResponseInterface $response
-	): ResponseInterface {
-		return $renderer->render($response, 'not_found.phtml');
+			->renderAsError($response, 'Not Found', 404);
 	}
 }

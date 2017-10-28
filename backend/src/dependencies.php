@@ -32,10 +32,7 @@ $container['phpErrorHandler'] = $container['errorHandler'] = function ($c) {
 	return function (ServerRequestInterface $request, ResponseInterface $response, Throwable $exception) use ($c) {
 		$formatter = new ErrorFormatter($c->get('settings')['displayErrorDetails']);
 		$formatter->log($c->logger, $exception);
-		return
-			is_api_endpoint($request)
-				? $formatter->renderJson($response, $exception)
-				: $formatter->renderHtml($c->renderer, $response, $exception);
+		return $formatter->renderJson($response, $exception);
 	};
 };
 
