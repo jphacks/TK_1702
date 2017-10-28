@@ -11,6 +11,4 @@ exec_cmd vendor/bin/propel model:build
 exec_cmd vendor/bin/propel config:convert
 exec_cmd php composer.phar dump-autoload $(env_if dev '' '-a')
 
-exec_cmd yarn install
-exec_cmd yarn run gulp compile
 print_message 'done.'
