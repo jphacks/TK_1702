@@ -7,20 +7,17 @@ use SlashApp\JsonRenderer;
 use SlashApp\Slim\Middleware\AuthMiddleware;
 use Slim\Http\UploadedFile;
 
-$container = $app->getContainer();
-$container['upload_directory'] = CH_BASE_DIR . '/static/video';
-
 $app->group('/video', function () {
 	$this->post('', function (ServerRequestInterface $request, ResponseInterface $response, $args) {
 		$user = $request->getAttribute('user');
 		$user_id = $user->getUserId();
-		$directory = $this->get('upload_directory');
 
 		$uploadedFiles = $request->getUploadedFiles();
+		/** @var UploadedFile $uploadedFile */
 		$uploadedFile = $uploadedFiles['video'];
 
 		if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-			$filename = moveUploadedFile($directory, $uploadedFile);
+			$filename = moveUploadedFile(\SlashApp\Constants::getStaticActualDirectory() . '/video', $uploadedFile);
 
 			$video = new \ORM\Video();
 			$video->setOwnerId($user_id)
@@ -35,31 +32,15 @@ $app->group('/video', function () {
 	});
 
 	$this->get('', function (ServerRequestInterface $request, ResponseInterface $response, $args) {
-		$directory = $this->get('upload_directory');
 		$user = $request->getAttribute('user');
 		$user_id = $user->getUserId();
 		$videos = \ORM\VideoQuery::create()
 			->filterByOwnerId($user_id)
 			->find();
-
-		return JsonRenderer::create()->render($response, objToArr($videos, '/static/video'));
+		return JsonRenderer::create()->render($response, format_as_api($videos));
 	});
 
 });
-
-function objToArr($obj, $directory)
-{
-	$arr = [];
-	foreach ($obj as $value) {
-		$piyo = [];
-		$piyo["created_at"] = $value->getCreatedAt();
-		$piyo["owner_id"] = $value->getOwnerId();
-		$piyo["file_name"] = $directory . DIRECTORY_SEPARATOR . $value->getFileName();
-		$piyo["thumb_name"] = $directory . DIRECTORY_SEPARATOR . $value->getThumbName();
-		$arr[] = $piyo;
-	}
-	return $arr;
-}
 
 function moveUploadedFile($directory, UploadedFile $uploadedFile)
 {
