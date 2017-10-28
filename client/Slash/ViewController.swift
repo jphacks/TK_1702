@@ -12,7 +12,7 @@ import AssetsLibrary
 import CoreLocation
 import Alamofire
 
-class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLLocationManagerDelegate  {
+class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CLLocationManagerDelegate  {
     let captureSession = AVCaptureSession()
     let videoDevice = AVCaptureDevice.default(for: AVMediaType.video)
     let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)
