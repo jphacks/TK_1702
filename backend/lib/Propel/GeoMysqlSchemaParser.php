@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace SlashApp\Propel;
+
 use Propel\Generator\Model\Table;
 use Propel\Generator\Reverse\MysqlSchemaParser;
 
