@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "28f9ebfebb5901e300f4afddf5627997",
-    "content-hash": "bbbaa71a57e207f6d41443ee70197099",
+    "hash": "2828ab20ba67d973d54a96cad1f063dd",
+    "content-hash": "a3066bddaacfcd69fa42b60c6f400bdb",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -1407,50 +1407,6 @@
                 "monolog utils"
             ],
             "time": "2017-08-18 13:37:57"
-        },
-        {
-            "name": "turenar/api-schema-generator",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/turenar/api-schema-generator.git",
-                "reference": "551bda54abf8edef636b9f40204991071672bc31"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/turenar/api-schema-generator/zipball/551bda54abf8edef636b9f40204991071672bc31",
-                "reference": "551bda54abf8edef636b9f40204991071672bc31",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "^1.4",
-                "ext-yaml": "^2.0",
-                "php": ">7.0",
-                "symfony/console": "^3.3"
-            },
-            "bin": [
-                "bin/apispecgen"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Turenar\\ApiSchema\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Turenar",
-                    "email": "snswinhaiku.lo@gmail.com"
-                }
-            ],
-            "support": {
-                "source": "https://github.com/turenar/api-schema-generator/tree/master",
-                "issues": "https://github.com/turenar/api-schema-generator/issues"
-            },
-            "time": "2017-10-11 06:28:04"
         }
     ],
     "packages-dev": [
@@ -2910,16 +2866,12 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "propel/propel": 20,
-        "turenar/api-schema-generator": 20
+        "propel/propel": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.1",
-        "ext-intl": "*",
-        "ext-ldap": "^7.1",
-        "ext-yaml": "^2.0.2"
+        "php": ">=7.1"
     },
     "platform-dev": []
 }
