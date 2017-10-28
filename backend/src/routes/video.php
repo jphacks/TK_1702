@@ -5,30 +5,28 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use SlashApp\JsonRenderer;
 use SlashApp\Slim\Middleware\AuthMiddleware;
-use SlashApp\Slim\Http\UploadedFile;
+use Slim\Http\UploadedFile;
 
 $container = $app->getContainer();
-$container['upload_directory'] = __DIR__.'../../../uploads';
+$container['upload_directory'] = CH_BASE_DIR.'/static/video';
 
 $app->group('/video', function() {
     $this->post('', function (ServerRequestInterface $request, ResponseInterface $response, $args) {
-        $udid = $response->getHeaderString('X-UDID');
-        $user_id = \ORM\UserQuery::create()
-            ->findOneByUdid($udid);
-
+        $user = $request->getAttribute('user');
+        $user_id = $user->getUserId();
         $tempfile = $_FILES['video']['tmp_name'];
         $directory = $this->get('upload_directory');
 
         $uploadedFiles = $request->getUploadedFiles();
         $uploadedFile = $uploadedFiles['video'];
 
-        if ($uploadedFiles->getError() === UPLOAD_ERR_OK) {
+        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
             $filename = moveUploadedFile($directory, $uploadedFile);
 
-            $video = new \ORM\Video()
-                ->setOwnerId($user_id)
+            $video = new \ORM\Video();
+            $video->setOwnerId($user_id)
                 ->setFileName($filename)
-                ->setThumbName(substr($filename,0,-3,"jpg"))
+                ->setThumbName(substr($filename,0,-3)."jpg")
                 ->save();
             
             return JsonRenderer::create()->render($response, ['message'=>'ok']);
@@ -38,18 +36,31 @@ $app->group('/video', function() {
     });
 
     $this->get('', function(ServerRequestInterface $request, ResponseInterface $response, $args) {
-        $udid = $response->getHeaderString('X-UDID');
-        $user_id = \ORM\UserQuery::create()
-            ->findOneByUdid($udid)
-            ->delete();
+        $directory = $this->get('upload_directory');
+        $user = $request->getAttribute('user');
+        $user_id = $user->getUserId();
         $videos = \ORM\VideoQuery::create()
-                ->filterByUserId($user_id)
+                ->filterByOwnerId($user_id)
                 ->find();
 
-        return get_renderer()->render($response, $videos);
+        return JsonRenderer::create()->render($response, objToArr($videos, '/static/video'));
     });
 
 });
+
+function objToArr($obj, $directory) 
+{
+	$arr = [];
+	foreach ($obj as $value) {
+		$piyo = [];
+		$piyo["created_at"] = $value->getCreatedAt();
+		$piyo["owner_id"] = $value->getOwnerId();
+		$piyo["file_name"] = $directory.DIRECTORY_SEPARATOR.$value->getFileName();
+		$piyo["thumb_name"] = $directory.DIRECTORY_SEPARATOR.$value->getThumbName();
+		$arr[] = $piyo;
+	}
+	return $arr;
+}
 
 function moveUploadedFile($directory, UploadedFile $uploadedFile)
 {
