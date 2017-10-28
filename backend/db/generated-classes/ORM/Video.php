@@ -3,6 +3,7 @@
 namespace ORM;
 
 use ORM\Base\Video as BaseVideo;
+use SlashApp\Constants;
 
 /**
  * Skeleton subclass for representing a row from the 'video' table.
@@ -16,5 +17,13 @@ use ORM\Base\Video as BaseVideo;
  */
 class Video extends BaseVideo
 {
-
+	public function formatAsApi()
+	{
+		return [
+			"created_at" => $this->getCreatedAt()->getTimestamp(),
+			"owner_id" => $this->getOwnerId(),
+			"file_name" => Constants::getStaticBasePath() . '/video/' . $this->getFileName(),
+			"thumb_name" => Constants::getStaticBasePath() . '/thumb/' . $this->getThumbName(),
+		];
+	}
 }
