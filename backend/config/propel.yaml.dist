@@ -24,3 +24,6 @@ propel:
   generator:
     defaultConnection: slashapp
     connections: [slashapp]
+  migrations:
+    addVendorInfo: true
+    parserClass: GeoMysqlSchemaParser
