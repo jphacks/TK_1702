@@ -50,23 +50,29 @@ Lineなどのメッセンジャーアプリで知り合いに緊急を伝える�
 #### API・データ
 今回スポンサーから提供されたAPI、製品などの外部技術があれば記述をして下さい。
 
-* 東京オープンデータカタログサイト http://opendata-catalogue.metro.tokyo.jp/dataset/t000002d0000000017  
-「町丁字別犯罪情報　平成29年分（月ごとの数値）」、東京都・東京都青少年・治安対策本部、クリエイティブ・コモンズ・ライセンス　表示4.0国際（https://creativecommons.org/licenses/by/4.0/deed.ja）
-* 東京都文京区の丁目境界データ http://e-stat.go.jp/SG2/eStatGIS/page/download.html
+* 東京都・東京都青少年・治安対策本部, http://opendata-catalogue.metro.tokyo.jp/dataset/t000002d0000000017, 東京オープンデータカタログサイト「町丁字別犯罪情報　平成29年分（月ごとの数値）」, 2017年10月28日.
+* 独立行政法人統計センター, http://e-stat.go.jp/SG2/eStatGIS/page/download.html, 東京都文京区の丁目境界データ, 2017年10月28日.
 
 #### フレームワーク・ライブラリ・モジュール
+
+**Client (iOS Application)**
+
+* Firebase Cloud Messaging
+* Firebase Instance Id
 * Alamofire
-* Firebase 
-* Line Messaging API
-* CLLocation
+* SwiftyJSON
+* LINE Messaging API
+
+**Server (Web Application)**
+
+* Slim
+* LINE Messaging API
 
 #### デバイス
 * iPhone
 
 ### 研究内容・事前開発プロダクト（任意）
-* 
-* 
-
+なし
 
 ### 独自開発技術（Hack Dayで開発したもの）
 #### 2日間に開発した独自の機能・技術
