@@ -11,6 +11,5 @@ exec_cmd sed -e "s/{{env}}/${CHAT_ENV}/" config/env.php.in >config/env.php
 exec_cmd vendor/bin/propel config:convert --output-file=config-test.php
 exec_cmd vendor/bin/propel sql:build
 exec_cmd vendor/bin/propel sql:insert
-exec_cmd vendor/bin/apispecgen
 
 exec_cmd vendor/bin/phpunit
