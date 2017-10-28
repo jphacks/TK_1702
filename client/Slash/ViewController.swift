@@ -113,6 +113,7 @@ class ViewController: UIViewController,AVCaptureFileOutputRecordingDelegate, CLL
         let df = DateFormatter()
         df.dateFormat = "yyyy/MM/dd HH:mm:ss"
         let timestamp = df.string(from: location.timestamp)
+        
         print("\(timestamp) \(latitude) \(longitude)")
     }
 
