@@ -7,15 +7,15 @@
 	<table name="user">
 		<column name="user_id" type="integer" required="true" autoIncrement="true" primaryKey="true"/>
 		<column name="udid" type="varchar" size="255" required="true"/>
-        <column name="line_id" type="varchar" size="255" required="false"/>
+		<column name="line_id" type="varchar" size="255" required="false"/>
 
 		<unique>
 			<unique-column name="udid"/>
 		</unique>
 
-        <index>
-            <index-column  name="line_id"/>
-        </index>
+		<index>
+			<index-column name="line_id"/>
+		</index>
 	</table>
 
 	<table name="location_history">
@@ -28,15 +28,16 @@
 		</foreign-key>
 	</table>
 
-    <table name="video">
-        <column name="owner_id" type="integer" required="true" />
-        <column name="file_name" type="varchar" size="255" required="true"/>
-        <column name="thumb_name" type="varchar" size="255" required="true"/>
+	<table name="video">
+		<column name="video_id" type="integer" required="true" autoIncrement="true" primaryKey="true"/>
+		<column name="owner_id" type="integer" required="true"/>
+		<column name="file_name" type="varchar" size="255" required="true"/>
+		<column name="thumb_name" type="varchar" size="255" required="true"/>
 
-        <foreign-key foreignTable="user">
-            <reference local="owner_id" foreign="user_id"/>
-        </foreign-key>
-    </table>
+		<foreign-key foreignTable="user">
+			<reference local="owner_id" foreign="user_id"/>
+		</foreign-key>
+	</table>
 
 	<table name="area">
 		<column name="area_id" type="integer" required="true" autoIncrement="true" primaryKey="true"/>
