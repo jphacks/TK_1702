@@ -1,36 +1,60 @@
 {
-    "name": "slim/slim-skeleton",
-    "description": "A Slim Framework skeleton application for rapid development",
-    "keywords": ["microframework", "rest", "router", "psr7"],
-    "homepage": "http://github.com/slimphp/Slim-Skeleton",
+    "name": "jphacks/TK_1702",
+    "description": "chat system",
+    "keywords": [],
+    "homepage": "http://example.com",
     "license": "MIT",
     "authors": [
         {
-            "name": "Josh Lockhart",
-            "email": "info@joshlockhart.com",
-            "homepage": "http://www.joshlockhart.com/"
+            "name": "Turenar",
+            "email": "snswinhaiku.lo@gmail.com",
+            "homepage": "https://github.com/turenar"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/turenar/api-schema-generator"
         }
     ],
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=7.1",
+        "ext-intl": "*",
+        "ext-ldap": "^7.1",
+        "ext-yaml": "^2.0.2",
         "slim/slim": "^3.1",
         "slim/php-view": "^2.0",
-        "monolog/monolog": "^1.17"
+        "monolog/monolog": "^1.17",
+        "propel/propel": "~2.0@dev",
+        "nojimage/twitter-text-php": "^1.14",
+        "theorchard/monolog-cascade": "^0.5.0",
+        "justinrainbow/json-schema": "^5.2",
+        "turenar/api-schema-generator": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": ">=4.8 < 6.0"
+        "phpunit/phpunit": "^6.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "ORM\\": "db/generated-classes"
+        },
+        "psr-4": {
+            "Chat\\": "lib"
+        },
+        "files": [
+            "src/config_loader.php",
+            "src/utility.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Chat\\": "tests/"
         }
     },
     "config": {
-        "process-timeout" : 0
+        "process-timeout": 0
     },
     "scripts": {
-        "start": "php -S localhost:8080 -t public public/index.php",
-        "test": "phpunit"
+        "start": "php -S 0.0.0.0:8080 -t public public/index.php"
     }
-
 }
