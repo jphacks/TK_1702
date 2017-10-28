@@ -2,10 +2,10 @@
 
 namespace ORM;
 
-use ORM\Base\DangerArea as BaseDangerArea;
+use ORM\Base\CrimeDangerAreaQuery as BaseCrimeDangerAreaQuery;
 
 /**
- * Skeleton subclass for representing a row from the 'danger_area' table.
+ * Skeleton subclass for performing query and update operations on the 'crime_danger_area' table.
  *
  *
  *
@@ -14,7 +14,7 @@ use ORM\Base\DangerArea as BaseDangerArea;
  * long as it does not already exist in the output directory.
  *
  */
-class DangerArea extends BaseDangerArea
+class CrimeDangerAreaQuery extends BaseCrimeDangerAreaQuery
 {
 
 }
