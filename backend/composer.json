@@ -9,7 +9,7 @@
             "name": "Turenar",
             "email": "snswinhaiku.lo@gmail.com",
             "homepage": "https://github.com/turenar"
-        }, 
+        },
         {
             "name": "totetote"
         }
@@ -22,6 +22,7 @@
     ],
     "require": {
         "php": ">=7.1",
+        "ext-yaml": "*",
         "slim/slim": "^3.1",
         "slim/php-view": "^2.0",
         "monolog/monolog": "^1.17",
