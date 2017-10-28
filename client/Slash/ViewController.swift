@@ -63,13 +63,14 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         print("Start updating Location")
         self.locationManager.startUpdatingLocation()
         
-        print("Set timer")
         self.flashTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(toggleFlash), userInfo: nil, repeats: true)
         self.flashTimer.fire()
+
         
         // NOTE: Work correctly?
         let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: Notification.Name.UIApplicationWillResignActive, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: Notification.Name.UIApplicationDidEnterBackground, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(appMovedToForeground), name: Notification.Name.UIApplicationWillEnterForeground, object: nil)
     }
     
     func setupVideo() -> AVCaptureVideoPreviewLayer? {
@@ -114,11 +115,27 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
     override func viewWillDisappear(_ animated: Bool) {
         print("View will disappear")
         super.viewWillDisappear(animated)
-        self.flashTimer.invalidate()
+        
+        if self.flashTimer.isValid {
+            self.flashTimer.invalidate()
+        }
+    }
+    
+    @objc func appMovedToForeground() {
+        print("App moved to foreground")
+        
+        if self.flashTimer.isValid {
+            self.flashTimer.invalidate()
+        }
+        
+        self.flashTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(toggleFlash), userInfo: nil, repeats: true)
+        self.flashTimer.fire()
     }
     
     @objc func appMovedToBackground() {
-        self.flashTimer.invalidate()
+        if self.flashTimer.isValid {
+            self.flashTimer.invalidate()
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
