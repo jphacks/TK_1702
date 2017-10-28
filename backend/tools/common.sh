@@ -46,7 +46,6 @@ env_if() {
 }
 
 if [ "x${CHAT_ENV-}" = x ]; then
-	print_warning "Assuming CHAT_ENV=dev"
 	CHAT_ENV=dev
 fi
 case ${CHAT_ENV} in
