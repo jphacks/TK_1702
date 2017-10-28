@@ -32,11 +32,13 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - Protobuf (3.4.0)
+  - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
   - Alamofire (= 4.5.1)
   - Firebase/Core
   - Firebase/Messaging
+  - SwiftyJSON
 
 SPEC CHECKSUMS:
   Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
@@ -48,7 +50,8 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 03eef2ee0b674770735cf79d9c4d3659cf6908e8
+  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: df129af300e1022194b9c7a95bc7f6a2cb63b2e2
+PODFILE CHECKSUM: e737f75c9fcd02e4fa878a4e0dbe411c7d76573c
 
 COCOAPODS: 1.2.1

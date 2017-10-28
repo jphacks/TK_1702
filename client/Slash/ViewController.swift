@@ -32,6 +32,10 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
     let avDevice = AVCaptureDevice.default(for: .video)
     var flashTimer : Timer!
     
+    let request : Request = {
+        return Request(deviceId: UIDevice.current.identifierForVendor!.uuidString)
+    }()
+    
     @IBOutlet weak var cameraLayer: UIView!
     @IBOutlet weak var stopButton: UIButton!
     
@@ -62,22 +66,10 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         print("Set timer")
         self.flashTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(toggleFlash), userInfo: nil, repeats: true)
         self.flashTimer.fire()
-                
+        
+        // NOTE: Work correctly?
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: Notification.Name.UIApplicationWillResignActive, object: nil)
-        
-        // This is for debugging.
-        let params = [
-            "latitude" : 34.5,
-            "longtitude" : 124.8
-        ]
-        
-        let header = [
-            "Content-Type":"application/json",
-            "X-UDID": UIDevice.current.identifierForVendor!.uuidString
-        ]
-        
-        Alamofire.request("https://private-anon-72073cf4f6-slashapp.apiary-mock.com/locations", parameters: params, headers:header)
     }
     
     func setupVideo() -> AVCaptureVideoPreviewLayer? {
@@ -114,22 +106,14 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         fileOutput.stopRecording()
     }
 
-    func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
-    }
-    
-    func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
-//        let assetsLib = ALAssetsLibrary()
-//        assetsLib.writeVideoAtPath(toSavedPhotosAlbum: outputFileURL as URL!, completionBlock: nil)
-    }
-    
     override func didReceiveMemoryWarning() {
+        print("View did receive memory warning")
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        print("View will disappear")
         super.viewWillDisappear(animated)
-
         self.flashTimer.invalidate()
     }
     
@@ -137,22 +121,33 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         self.flashTimer.invalidate()
     }
     
-    func applicationDidEnterBackground(application: UIApplication) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("Update location")
         
+        let location = locations.last!
+        
+        self.request.postLocation(
+            latitude: location.coordinate.latitude,
+            longtitude: location.coordinate.longitude
+        )
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location = locations.last!
-        let params = [
-            "latitude" : location.coordinate.latitude,
-            "longtitude" : location.coordinate.longitude
-        ]
-        print(params)
-        Alamofire.request("http://www.slashapp.ml/locations", parameters: params)
+    func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
+    }
+    
+    func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
+        print("didFinishRecordingToOutputFileAtURL: \(outputFileURL)")
+        //        let assetsLib = ALAssetsLibrary()
+        //        assetsLib.writeVideoAtPath(toSavedPhotosAlbum: outputFileURL as URL!, completionBlock: nil)
     }
     
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        self.sendMovie()
+        print("didFinishRecordingTo: \(outputFileURL)")
+
+//        let data = try! Data(contentsOf: outputFileURL, options: [])
+        self.request.postVideo(fileURL: outputFileURL, completion: {
+            
+        })
     }
     
     @objc func toggleFlash(flg: Bool) {
@@ -170,18 +165,4 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
             print("Torch is not available")
         }
     }
-    
-    private func sendMovie() {
-        // This is for debugging.
-        Alamofire.request("https://httpbin.org/get").response { response in
-            print("Request: \(String(describing: response.request))")
-            print("Response: \(String(describing: response.response) )")
-            print("Error: \(String(describing: response.error))")
-            
-            if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                print("Data: \(utf8Text)")
-            }
-        }
-    }
 }
-
