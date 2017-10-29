@@ -3,6 +3,8 @@
 namespace ORM;
 
 use ORM\Base\LocationHistory as BaseLocationHistory;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
+use SlashApp\Propel\LatLongTrait;
 
 /**
  * Skeleton subclass for representing a row from the 'location_history' table.
@@ -16,5 +18,10 @@ use ORM\Base\LocationHistory as BaseLocationHistory;
  */
 class LocationHistory extends BaseLocationHistory
 {
+	use LatLongTrait;
 
+	protected function getGeometryColumnName(): string
+	{
+		return 'LocationHistory.Location';
+	}
 }
