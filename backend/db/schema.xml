@@ -7,10 +7,16 @@
 	<table name="user">
 		<column name="user_id" type="integer" required="true" autoIncrement="true" primaryKey="true"/>
 		<column name="udid" type="varchar" size="255" required="true"/>
+		<column name="line_id" type="varchar" size="255"/>
+		<column name="fcm_token" type="varchar" size="255"/>
 
 		<unique>
 			<unique-column name="udid"/>
 		</unique>
+
+		<index>
+			<index-column name="line_id"/>
+		</index>
 	</table>
 
 	<table name="location_history">
@@ -20,6 +26,17 @@
 
 		<foreign-key foreignTable="user">
 			<reference local="user_id" foreign="user_id"/>
+		</foreign-key>
+	</table>
+
+	<table name="video">
+		<column name="video_id" type="integer" required="true" autoIncrement="true" primaryKey="true"/>
+		<column name="owner_id" type="integer" required="true"/>
+		<column name="file_name" type="varchar" size="255" required="true"/>
+		<column name="thumb_name" type="varchar" size="255" required="true"/>
+
+		<foreign-key foreignTable="user">
+			<reference local="owner_id" foreign="user_id"/>
 		</foreign-key>
 	</table>
 

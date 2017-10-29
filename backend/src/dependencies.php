@@ -9,10 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 $container = $app->getContainer();
 
 SlashApp\ExceptionErrorHandler::register();
-
-(function ($c) {
-	LoggerProvider::init();
-})($container);
+LoggerProvider::init();
 
 // view renderer
 $container['renderer'] = function ($c) {
@@ -49,3 +46,4 @@ $container['notAllowedHandler'] = function ($c) {
 		return $handler($c->renderer, $request, $response, $methods);
 	};
 };
+
