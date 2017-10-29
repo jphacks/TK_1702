@@ -63,9 +63,9 @@ $app->group('/video', function () {
 				return JsonRenderer::create()->renderAsError($response, 'encode failed', 500);
 			}
 
-			$video_uri = Constants::getUrlBase() . Constants::getStaticActualDirectory() . '/video/' . $basename . '.mp4';
-			$thumb_uri = Constants::getUrlBase() . Constants::getStaticActualDirectory() . '/thumb/' . $basename . '.jpg';
-
+			$video_uri = Constants::getUrlBase() . '/' . Constants::getStaticActualDirectory() . '/video/' . $basename . '.mp4';
+			$thumb_uri = Constants::getUrlBase() . '/' . Constants::getStaticActualDirectory() . '/thumb/' . $basename . '.jpg';
+			\SlashApp\LoggerProvider::getLogger('hoge')->debug($video_uri);
 			$video = new \ORM\Video();
 			$video->setOwnerId($user_id)
 				->setFileName($basename . '.mp4')
