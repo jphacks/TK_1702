@@ -10,10 +10,6 @@
 - 性犯罪（強姦・強制わいせつ・公然わいせつ）は毎年1万件近く発生し、迷惑防止条例違反（痴漢、盗撮）も増加傾向にあり、こういった犯罪は夜の時間帯20~24時に多く発生しています。
 ![時間帯別強姦・強制わいせつ・痴漢の発生件数](http://natural-friends.jp/thumb/blog/2015/security/security01/0128_007-1.gif)
 
-![What It's Like To Be A Woman At Night](https://youtu.be/NGW9UjCTjY0)
-![](https://i.ytimg.com/vi/NGW9UjCTjY0/maxresdefault.jpg)
-
-
 - いけないとはわかっていていてもつい歩きスマホをして周囲への注意がおなざりになってしまいます。
 [夜道での犯罪の加害者への調査](http://natural-friends.jp/dont-walk-alone/)では、「・無防備（音楽を聴いている、メールや電話をして歩いている）」女性は特に狙いやすいとの調査結果があります。
 - 危険に気づいても咄嗟に「スマホのロックを解除して、Lineを起動して、友達に連絡して…」では取り返しのつかない事態になりかねません。
