@@ -11,7 +11,7 @@ import Alamofire
 import SwiftyJSON
 
 class Request {
-    static let URL_BASE = "https://private-anon-72073cf4f6-slashapp.apiary-mock.com"
+    static let URL_BASE = "https://www.slashapp.ml" // https://private-anon-72073cf4f6-slashapp.apiary-mock.com"
 
     let deviceId : String
     var headers : [ String : String ] {
@@ -29,10 +29,10 @@ class Request {
     
     static let LOCATIONS_PATH = "\(URL_BASE)/location"
     
-    func postLocation(latitude : Double, longtitude : Double) {
+    func postLocation(latitude : Double, longitude : Double) {
         // MEMO: https://qiita.com/Chan_moro/items/a1aa89acf2b1d21f9498
         
-        let parameters = [ "latitude": latitude, "longtitude": longtitude ]
+        let parameters = [ "latitude": latitude, "longitude": longitude ]
         
         Alamofire.request(Request.LOCATIONS_PATH, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers).responseJSON { response in
             print("postLocation Status: \(String(describing: response.response?.statusCode))")
@@ -42,16 +42,35 @@ class Request {
     
     static let VIDEO_PATH = "\(URL_BASE)/video"
     
-    func postVideo(fileURL : URL, completion : @escaping () -> Void) {
+    // MEMO: Output file is too large!
+    func postVideo(data : Data, completion : @escaping () -> Void) {
         // MEMO: https://github.com/Alamofire/Alamofire#uploading-data-to-a-server
         
-        Alamofire.upload(fileURL, to: Request.VIDEO_PATH, headers: [ "X-UDID" : self.deviceId ]).response { response in
-            print("postVideo Status: \(String(describing: response.response?.statusCode))")
-            
-            if response.error != nil {
-                completion()
-            }
-        }
+        Alamofire.upload(
+            multipartFormData: { multipartFormData in
+                multipartFormData.append(
+                    data,
+                    withName: "video",
+                    fileName: "temp.mp4",
+                    mimeType: "multipart/form-data"
+                )
+            },
+            to: Request.VIDEO_PATH,
+            headers: [ "X-UDID" : self.deviceId ],
+            encodingCompletion: { encodingResult in
+                switch encodingResult {
+                case .success(let upload, _, _):
+                    upload
+                        .uploadProgress(closure: { (progress) in
+                            print("Upload Progress: \(progress.fractionCompleted)")
+                        })
+                        .responseString { response in
+                            debugPrint(response)
+                        }
+                case .failure(let encodingError):
+                    print(encodingError)
+                }
+        })
     }
     
     func getVideo(completion : @escaping ([ Video ]) -> Void) {
@@ -73,6 +92,16 @@ class Request {
             }
             
             completion(videos)
+        }
+    }
+    
+    static let FCM_PATH = "\(URL_BASE)/fcm"
+    
+    func postFCM(fcmToken : String) {
+        let parameters = [ "token" : fcmToken ]
+        
+        Alamofire.request(Request.FCM_PATH, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: [ "X-UDID" : self.deviceId ]).responseJSON { response in
+            print("postFCM Status: \(String(describing: response.response?.statusCode))")
         }
     }
     

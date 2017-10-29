@@ -18,6 +18,12 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
     let videoDevice = AVCaptureDevice.default(for: AVMediaType.video)
     let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)
     let fileOutput = AVCaptureMovieFileOutput()
+    let fileOutputPath : URL = {
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentsDirectory = paths[0] as String
+        let filePath : String? = "\(documentsDirectory)/temp.mp4"
+        return URL(fileURLWithPath: filePath!)
+    }()
     
     var locationManager : CLLocationManager = {
         let manager = CLLocationManager()
@@ -36,6 +42,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         return Request(deviceId: UIDevice.current.identifierForVendor!.uuidString)
     }()
     
+    var flashEnable : Bool = false
+    
     @IBOutlet weak var cameraLayer: UIView!
     @IBOutlet weak var stopButton: UIButton!
     
@@ -52,6 +60,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         }
         
         self.captureSession.startRunning()
+        self.fileOutput.startRecording(to: fileOutputPath, recordingDelegate: self)
         
         print("Set up location manager")
         if CLLocationManager.authorizationStatus() != .authorizedAlways {
@@ -65,12 +74,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         
         self.flashTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(toggleFlash), userInfo: nil, repeats: true)
         self.flashTimer.fire()
-
         
-        // NOTE: Work correctly?
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: Notification.Name.UIApplicationDidEnterBackground, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(appMovedToForeground), name: Notification.Name.UIApplicationWillEnterForeground, object: nil)
+        self.flashEnable = true
     }
     
     func setupVideo() -> AVCaptureVideoPreviewLayer? {
@@ -112,41 +117,26 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         super.didReceiveMemoryWarning()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.flashEnable = true
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         print("View will disappear")
         super.viewWillDisappear(animated)
         
-        if self.flashTimer.isValid {
-            self.flashTimer.invalidate()
-        }
-    }
-    
-    @objc func appMovedToForeground() {
-        print("App moved to foreground")
-        
-        if self.flashTimer.isValid {
-            self.flashTimer.invalidate()
-        }
-        
-        self.flashTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(toggleFlash), userInfo: nil, repeats: true)
-        self.flashTimer.fire()
-    }
-    
-    @objc func appMovedToBackground() {
-        if self.flashTimer.isValid {
-            self.flashTimer.invalidate()
-        }
+        self.flashEnable = false
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print("Update location")
         
-        let location = locations.last!
-        
-        self.request.postLocation(
-            latitude: location.coordinate.latitude,
-            longtitude: location.coordinate.longitude
-        )
+        if let location = locations.last {
+            self.request.postLocation(
+                latitude: location.coordinate.latitude,
+                longitude: location.coordinate.longitude
+            )
+        }
     }
     
     func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
@@ -154,17 +144,17 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
     
     func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
         print("didFinishRecordingToOutputFileAtURL: \(outputFileURL)")
-        //        let assetsLib = ALAssetsLibrary()
-        //        assetsLib.writeVideoAtPath(toSavedPhotosAlbum: outputFileURL as URL!, completionBlock: nil)
+//                let assetsLib = ALAssetsLibrary()
+//                assetsLib.writeVideoAtPath(toSavedPhotosAlbum: outputFileURL as URL!, completionBlock: nil)
     }
     
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         print("didFinishRecordingTo: \(outputFileURL)")
 
 //        let data = try! Data(contentsOf: outputFileURL, options: [])
-        self.request.postVideo(fileURL: outputFileURL, completion: {
-            
-        })
+//        self.request.postVideo(data: data, completion: {
+//
+//        })
     }
     
     @objc func toggleFlash(flg: Bool) {
@@ -172,7 +162,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
             do {
                 try self.avDevice?.lockForConfiguration()
                 
-                self.avDevice?.torchMode = (self.avDevice?.torchMode == .on ? .off : .on)
+                self.avDevice?.torchMode = (self.avDevice?.torchMode == .on || self.flashEnable == false ? .off : .on)
                 
                 self.avDevice?.unlockForConfiguration()
             } catch {
