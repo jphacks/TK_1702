@@ -67,11 +67,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        Messaging.messaging().apnsToken = deviceToken
+        let token = deviceToken.map { String(format: "%.2hhx", $0) }.joined()
 
-        print("Update APNs Token: \(deviceToken)")
+        print("Update APNs Token: \(token)")
+
+        Messaging.messaging().apnsToken = deviceToken
         
-        // TODO: send device token to server
+        let request = Request(deviceId: UIDevice.current.identifierForVendor!.uuidString)
+
+        if let fcmToken = Messaging.messaging().fcmToken {
+            request.postFCM(fcmToken: fcmToken)
+        }
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
