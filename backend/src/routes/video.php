@@ -25,13 +25,25 @@ $app->group('/video', function () {
 				->setThumbName(substr($filename, 0, -3) . "jpg")
 				->save();
 
+            $locationHistory = \ORM\LocationHistoryQuery::create()
+                        ->orderByCreatedAt(Criteria::DESC)
+                        ->withLatLong()
+                        ->findOneByUserId($user_id);
+
+
             $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(\SlashApp\Constants::getLineToken());
             $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => \SlashApp\Constants::getLineChannelSecret()]);
 
-            $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('危険が迫っている可能性があります');
-            $bot->pushMessage(\SlashApp\Constants::getLineReceiverId(), $textMessageBuilder);
+            $locationMessageBuilder = new \LINE\LINEBot\MessageBuilder\LocationMessageBuilder(
+                '危険が迫っている可能性があります',
+                '',
+                $locationHistory->getLatitude(),
+                $locationHistory->getLongitude()
+            );
 
-			return JsonRenderer::create()->render($response, ['message' => 'ok']);
+            $bot->pushMessage(\SlashApp\Constants::getLineReceiverId(), $locationMessageBuilder);
+
+			return JsonRenderer::create()->render($response, ['status' => 'ok']);
 		} else {
 			return JsonRenderer::create()->renderAsError($response, 'Upload Failure', 400);
 		}
@@ -46,6 +58,17 @@ $app->group('/video', function () {
 		return JsonRenderer::create()->render($response, format_as_api($videos));
 	});
 
+    $this->delete('', function (ServerRequestInterface $request, ResponseInterface $response, $args) {
+        $user = $request->getAttribute('user');
+	    $body = $request->getParsedBody();
+        $video_id = $body['id'] ?? null;
+		$user_id = $user->getUserId();
+		$videos = \ORM\VideoQuery::create()
+			->filterByOwnerId($user_id)
+			->filterById($video_id)
+            ->delete();
+        return JsonRenderer::create()->render($response, ['status' => 'ok']);
+    });
 });
 
 function moveUploadedFile($directory, UploadedFile $uploadedFile)
