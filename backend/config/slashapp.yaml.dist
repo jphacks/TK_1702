@@ -6,3 +6,5 @@ line:
   token: ''
   secret: ''
   receiver_id: ''
+fcm:
+  authorization: ''
