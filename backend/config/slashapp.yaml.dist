@@ -1,0 +1,8 @@
+static:
+  base_path: /static
+  directory: %BASE_DIR%/static
+  url: https://www.slashapp.ml
+line:
+  token: ''
+  secret: ''
+  receiver_id: ''
