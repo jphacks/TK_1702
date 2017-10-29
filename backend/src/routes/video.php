@@ -29,9 +29,7 @@ $app->group('/video', function () {
             $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => \SlashApp\Constants::getLineChannelSecret()]);
 
             $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('危険が迫っている可能性があります');
-            $response = $bot->pushMessage(\SlashApp\Constants::getLineReceiverId(), $textMessageBuilder);
-
-            echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
+            $bot->pushMessage(\SlashApp\Constants::getLineReceiverId(), $textMessageBuilder);
 
 			return JsonRenderer::create()->render($response, ['message' => 'ok']);
 		} else {
