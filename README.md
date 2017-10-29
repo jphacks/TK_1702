@@ -1,4 +1,4 @@
-# Miga - I'll protect YOU. -
+# Miga 
 
 ## 製品概要
 ### Security X Tech 
