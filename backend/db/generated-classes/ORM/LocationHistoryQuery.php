@@ -3,6 +3,7 @@
 namespace ORM;
 
 use ORM\Base\LocationHistoryQuery as BaseLocationHistoryQuery;
+use SlashApp\Propel\LatLongTrait;
 
 /**
  * Skeleton subclass for performing query and update operations on the 'location_history' table.
@@ -16,5 +17,10 @@ use ORM\Base\LocationHistoryQuery as BaseLocationHistoryQuery;
  */
 class LocationHistoryQuery extends BaseLocationHistoryQuery
 {
+	use LatLongTrait;
 
+	protected function getGeometryColumnName(): string
+	{
+		return 'LocationHistory.Location';
+	}
 }
