@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use SlashApp\Constants;
 use SlashApp\JsonRenderer;
 use SlashApp\Slim\Middleware\AuthMiddleware;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -18,16 +19,57 @@ $app->group('/video', function () {
 		$uploadedFile = $uploadedFiles['video'];
 
 		if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-			$filename = moveUploadedFile(\SlashApp\Constants::getStaticActualDirectory() . '/video', $uploadedFile);
-			$thumbname = str_replace("video", "thumb", substr($filename, 0, -3)."jpg");
-			$arr = explode("/", $filename);
-			$video_uri = \SlashApp\Constants::getUrlBase().\SlashApp\Constants::getStaticActualDirectory().'/video/'. end($arr);
-			$thumb_uri = \SlashApp\Constants::getUrlBase().\SlashApp\Constants::getStaticActualDirectory().'/thumb/'. substr(end($arr), 0, -3)."jpg";
+			$basename = bin2hex(random_bytes(32));
+			$video_temp = Constants::getStaticActualDirectory() . '/video/' . $basename . '.mov';
+			$video_file = Constants::getStaticActualDirectory() . '/video/' . $basename . '.mp4';
+			$thumb_file = Constants::getStaticActualDirectory() . '/thumb/' . $basename . '.jpg';
+
+			$uploadedFile->moveTo($video_temp);
+
+			$cmd = sprintf('ffmpeg -i %s -c:v copy -c:a copy %s',
+				escapeshellarg($video_temp), escapeshellarg($video_file));
+			$errorfp = fopen('/tmp/jphacks2017.log', 'w');
+			$desc = [
+				0 => ['file', '/dev/null', 'r'],
+				1 => $errorfp,
+				2 => $errorfp
+			];
+			$subproc = proc_open($cmd, $desc, $pipes);
+			if (is_resource($subproc)) {
+				$return_value = proc_close($subproc);
+				if ($return_value) {
+					return JsonRenderer::create()->renderAsError($response, 'encode failed', 500);
+				}
+			} else {
+				return JsonRenderer::create()->renderAsError($response, 'encode failed', 500);
+			}
+
+			unlink($video_temp);
+
+			$cmd = sprintf('ffmpeg -i %s -ss 00:00:01 -vframes 1 %s',
+				escapeshellarg($video_file), escapeshellarg($thumb_file));
+			$desc = [
+				0 => ['file', '/dev/null', 'r'],
+				1 => $errorfp,
+				2 => $errorfp
+			];
+			$subproc = proc_open($cmd, $desc, $pipes);
+			if (is_resource($subproc)) {
+				$return_value = proc_close($subproc);
+				if ($return_value) {
+					return JsonRenderer::create()->renderAsError($response, 'encode failed', 500);
+				}
+			} else {
+				return JsonRenderer::create()->renderAsError($response, 'encode failed', 500);
+			}
+
+			$video_uri = Constants::getUrlBase() . Constants::getStaticActualDirectory() . '/video/' . $basename . '.mp4';
+			$thumb_uri = Constants::getUrlBase() . Constants::getStaticActualDirectory() . '/thumb/' . $basename . '.jpg';
 
 			$video = new \ORM\Video();
 			$video->setOwnerId($user_id)
-				->setFileName($filename)
-				->setThumbName($thumbname)
+				->setFileName($video_file)
+				->setThumbName($thumb_file)
 				->save();
 
 			$locationHistory = \ORM\LocationHistoryQuery::create()
@@ -36,8 +78,8 @@ $app->group('/video', function () {
 				->findOneByUserId($user_id);
 
 
-			$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(\SlashApp\Constants::getLineToken());
-			$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => \SlashApp\Constants::getLineChannelSecret()]);
+			$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(Constants::getLineToken());
+			$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => Constants::getLineChannelSecret()]);
 
 			$locationMessageBuilder = new \LINE\LINEBot\MessageBuilder\LocationMessageBuilder(
 			    '危険が迫っている可能性があります',
@@ -46,14 +88,14 @@ $app->group('/video', function () {
 			    $locationHistory->getLongitude()
 			);
 
-			$bot->pushMessage(\SlashApp\Constants::getLineReceiverId(), $locationMessageBuilder);
+			$bot->pushMessage(Constants::getLineReceiverId(), $locationMessageBuilder);
 //
 
 			$videoMessageBuilder = new \LINE\LINEBot\MessageBuilder\VideoMessageBuilder(
 				$video_uri,
 				$thumb_uri
 			);
-			$bot->pushMessage(\SlashApp\Constants::getLineReceiverId(), $videoMessageBuilder);
+			$bot->pushMessage(Constants::getLineReceiverId(), $videoMessageBuilder);
 
 
 			return JsonRenderer::create()->render($response, ['status' => 'ok']);
@@ -83,13 +125,3 @@ $app->group('/video', function () {
         return JsonRenderer::create()->render($response, ['status' => 'ok']);
     });
 });
-
-function moveUploadedFile($directory, UploadedFile $uploadedFile)
-{
-	$basename = bin2hex(random_bytes(32));
-	$filename = sprintf('%s.mp4', $basename);
-
-	$uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
-
-	return $filename;
-}
