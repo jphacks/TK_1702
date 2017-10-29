@@ -25,6 +25,14 @@ $app->group('/video', function () {
 				->setThumbName(substr($filename, 0, -3) . "jpg")
 				->save();
 
+            $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(\SlashApp\Constants::getLineToken());
+            $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => \SlashApp\Constants::getLineChannelSecret()]);
+
+            $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('危険が迫っている可能性があります');
+            $response = $bot->pushMessage(\SlashApp\Constants::getLineReceiverId(), $textMessageBuilder);
+
+            echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
+
 			return JsonRenderer::create()->render($response, ['message' => 'ok']);
 		} else {
 			return JsonRenderer::create()->renderAsError($response, 'Upload Failure', 400);

@@ -29,6 +29,22 @@ class Constants
 	{
 		return self::$config;
 	}
+
+	public static function getLineToken()
+    {
+        return self::$config['line']['token'];
+    }
+
+    public static function getLineChannelSecret()
+    {
+        return self::$config['line']['secret'];
+    }
+
+    public static function getLineReceiverId()
+    {
+        return self::$config['line']['receiver_id'];
+    }
+
 }
 
 Constants::init();
