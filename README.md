@@ -69,7 +69,9 @@ Lineなどのメッセンジャーアプリで知り合いに緊急を伝える�
 
 **Server (Web Application)**
 
-* Slim
+* Slim Framework v3
+* Propel v2
+* monolog
 * LINE Messaging API
 
 #### デバイス
