@@ -1,4 +1,5 @@
 # Miga 
+![Miga](https://user-images.githubusercontent.com/16631193/32140676-c9c759fe-bcac-11e7-83e3-05837ae2c66e.png)
 
 ## 製品概要
 ### Security X Tech 
