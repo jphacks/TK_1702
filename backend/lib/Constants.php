@@ -30,6 +30,11 @@ class Constants
 		return self::$config;
 	}
 
+	public static function getUrlBase()
+	{
+		return self::$config['static']['url'];
+	}
+
 	public static function getLineToken()
     {
         return self::$config['line']['token'];
