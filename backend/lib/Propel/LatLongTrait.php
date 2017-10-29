@@ -24,5 +24,4 @@ trait LatLongTrait
 			->withColumn(sprintf('X(%s)', $geo_column_name), $long_name)
 			->withColumn(sprintf('Y(%s)', $geo_column_name), $lat_name);
 	}
-
 }
