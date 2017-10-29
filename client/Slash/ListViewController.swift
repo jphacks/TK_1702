@@ -14,7 +14,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var startButton: UIButton!
     
     var placeList = ["本郷1丁目","本郷2丁目", "本郷3丁目","本郷4丁目","本郷5丁目","本郷6丁目","本郷7丁目", "本郷8丁目"]
-    var timeList = ["2016年12月31日","2017年2月4日", "2017年2月15日","2017年5月31日","2017年8月31日","2016年9月17日","2016年11月1日", "2017年12月31日"]
+    var timeList = ["2017年10月22日","2017年10月23日", "2017年10月24日","2017年10月27日","2017年10月27日","2016年9月17日","2016年11月1日", "2017年12月31日"]
     
     var imageNameList = ["list_sample_image", "list_sample_image_2", "list_sample_image_3",
          "list_sample_image_4", "list_sample_image_5",

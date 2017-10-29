@@ -151,10 +151,10 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         print("didFinishRecordingTo: \(outputFileURL)")
 
-//        let data = try! Data(contentsOf: outputFileURL, options: [])
-//        self.request.postVideo(data: data, completion: {
-//
-//        })
+        let data = try! Data(contentsOf: outputFileURL, options: [])
+        self.request.postVideo(data: data, completion: {
+
+        })
     }
     
     @objc func toggleFlash(flg: Bool) {
