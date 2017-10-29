@@ -20,8 +20,9 @@ $app->group('/video', function () {
 		if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
 			$filename = moveUploadedFile(\SlashApp\Constants::getStaticActualDirectory() . '/video', $uploadedFile);
 			$thumbname = str_replace("video", "thumb", substr($filename, 0, -3)."jpg");
-			$video_uri = \SlashApp\Constants::getUrlBase().\SlashApp\Constants::getStaticActualDirectory().'/video/'.explode("/", $filename)[-1];
-			$thumb_uri = \SlashApp\Constants::getUrlBase().\SlashApp\Constants::getStaticActualDirectory().'/thumb/'.explode("/", substr($filename, 0, -3). "jpg")[-1];
+			$arr = explode("/", $filename);
+			$video_uri = \SlashApp\Constants::getUrlBase().\SlashApp\Constants::getStaticActualDirectory().'/video/'. end($arr);
+			$thumb_uri = \SlashApp\Constants::getUrlBase().\SlashApp\Constants::getStaticActualDirectory().'/thumb/'. substr(end($arr), 0, -3)."jpg";
 
 			$video = new \ORM\Video();
 			$video->setOwnerId($user_id)
