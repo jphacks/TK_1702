@@ -68,8 +68,8 @@ $app->group('/video', function () {
 
 			$video = new \ORM\Video();
 			$video->setOwnerId($user_id)
-				->setFileName($video_file)
-				->setThumbName($thumb_file)
+				->setFileName($basename . '.mp4')
+				->setThumbName($basename . '.jpg')
 				->save();
 
 			$locationHistory = \ORM\LocationHistoryQuery::create()
