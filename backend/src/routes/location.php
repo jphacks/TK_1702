@@ -34,9 +34,24 @@ $app->post('/location', function (ServerRequestInterface $request, ResponseInter
 		->findOne();
 
 	if ($danger !== null) {
+		$message = sprintf('最近 %s で %s が発生しました！注意して移動しましょう。', $danger->getArea()->getFriendlyName(),
+			$danger->getReason());
+		$curl = curl_init('https://fcm.googleapis.com/fcm/send');
+		$data = [
+			"to" => $user->getFcmToken(),
+			"notification" => ["body" => $message, "title" => "注意！"]
+		];
+		curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_HTTPHEADER, [
+			'Authorization: key=' . \SlashApp\Constants::getFcmAuthorization(),
+			'Content-Type: application/json'
+		]);
+		$curl_response = curl_exec($curl);
+
 		return JsonRenderer::create()->render($response, [
 			'status' => 'warn',
-			'message' => sprintf('%s で %s', $danger->getArea()->getFriendlyName(), $danger->getReason())
+			'message' => $message
 		]);
 	} else {
 		return JsonRenderer::create()->render($response, ['status' => 'none']);

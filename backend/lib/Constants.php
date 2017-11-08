@@ -50,6 +50,10 @@ class Constants
         return self::$config['line']['receiver_id'];
     }
 
+	public static function getFcmAuthorization()
+	{
+		return self::$config['fcm']['authorization'];
+	}
 }
 
 Constants::init();
