@@ -82,12 +82,11 @@ class Request {
 
             let videos = json.arrayValue.map {
                 return Video(
-                    id: $0.intValue,
-                    created_at: $0.intValue,
-                    video_file: $0.string!,
-                    thumbnail: $0.string!,
-                    longtitude: $0.intValue,
-                    latitude: $0.intValue
+                    id: $0["owner_id"].intValue,
+                    created_at: $0["created_at"].intValue,
+                    video_file: $0["file_name"].string!,
+                    thumbnail: $0["thumb_name"].string!,
+                    place: $0["place"].string!
                 )
             }
             

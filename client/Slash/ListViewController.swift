@@ -21,26 +21,38 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
          "list_sample_image_5", "list_sample_image_5",
          "list_sample_image_5"]
     
-    //データを返すメソッド（スクロールなどでページを更新する必要が出るたびに呼び出される）
-    internal func tableView(_ tableView:UITableView, cellForRowAt indexPath:IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "testCell", for: indexPath) as! CustomTableViewCell
+    var refreshControl: UIRefreshControl!
 
-        cell.setCell(imageName: imageNameList[indexPath.row], titleText: placeList[indexPath.row], descriptionText: timeList[indexPath.row])
-        
-        return cell
-    }
+    let request : Request = {
+        return Request(deviceId: UIDevice.current.identifierForVendor!.uuidString)
+    }()
     
-    //データの個数を返すメソッド
-    func tableView(_ tableView:UITableView, numberOfRowsInSection section:Int) -> Int {
-        return timeList.count
-    }
+    var videos : [ Video ] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.fetchVideo()
         self.setupStyles()
+        
         tableView.delegate = self
         tableView.dataSource = self
+        
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.attributedTitle = NSAttributedString(string: "")
+        self.refreshControl.addTarget(self, action: #selector(refresh), for: UIControlEvents.valueChanged)
+        self.tableView.addSubview(refreshControl)
+    }
+    
+    @objc func refresh() {
+        self.refreshControl.endRefreshing()
+        self.tableView.reloadData()
+    }
+    
+    func fetchVideo() {
+        request.getVideo { self.videos = $0 }
+
+        self.tableView.reloadData()
     }
     
     func setupStyles() {
@@ -48,4 +60,17 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.startButton.layer.cornerRadius = 20.0
     }
     
+    //データを返すメソッド（スクロールなどでページを更新する必要が出るたびに呼び出される）
+    internal func tableView(_ tableView:UITableView, cellForRowAt indexPath:IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "testCell", for: indexPath) as! CustomTableViewCell
+        
+        cell.setCell(video: videos[indexPath.row])
+        
+        return cell
+    }
+    
+    //データの個数を返すメソッド
+    func tableView(_ tableView:UITableView, numberOfRowsInSection section:Int) -> Int {
+        return videos.count
+    }
 }
