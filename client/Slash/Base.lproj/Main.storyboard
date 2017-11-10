@@ -103,12 +103,14 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rcL-W5-pb6">
-                                        <rect key="frame" x="296" y="15" width="46" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <state key="normal" title="Button">
-                                            <color key="titleColor" red="0.69803921570000005" green="0.0039215686269999999" blue="0.36078431370000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rcL-W5-pb6">
+                                        <rect key="frame" x="283" y="15" width="84" height="30"/>
+                                        <color key="backgroundColor" red="1" green="0.1857388616" blue="0.57339501380000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="84" id="RQ3-Uv-eYo"/>
+                                        </constraints>
+                                        <state key="normal" title="LINE連携">
+                                            <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <action selector="pushLineButton:" destination="T7R-d1-V1g" eventType="touchUpInside" id="2l5-ST-Qda"/>
@@ -119,9 +121,12 @@
                                 <constraints>
                                     <constraint firstItem="kNU-Nu-78q" firstAttribute="top" secondItem="j6K-1K-z84" secondAttribute="top" constant="16" id="1Wi-mf-crj"/>
                                     <constraint firstAttribute="height" constant="60" id="ADm-GS-OEQ"/>
+                                    <constraint firstItem="rcL-W5-pb6" firstAttribute="top" secondItem="j6K-1K-z84" secondAttribute="top" constant="15" id="JPt-e0-I5o"/>
+                                    <constraint firstAttribute="bottom" secondItem="rcL-W5-pb6" secondAttribute="bottom" constant="15" id="L2t-Mo-187"/>
                                     <constraint firstAttribute="trailing" secondItem="kNU-Nu-78q" secondAttribute="trailing" constant="127" id="Wjg-dH-QR1"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="ct6-oA-g1b"/>
                                     <constraint firstItem="kNU-Nu-78q" firstAttribute="leading" secondItem="j6K-1K-z84" secondAttribute="leading" constant="126" id="hoh-Bc-wz6"/>
+                                    <constraint firstAttribute="trailing" secondItem="rcL-W5-pb6" secondAttribute="trailing" constant="8" id="oMk-1u-7ak"/>
                                     <constraint firstAttribute="bottom" secondItem="kNU-Nu-78q" secondAttribute="bottom" constant="15" id="soL-qI-UHF"/>
                                 </constraints>
                             </view>
