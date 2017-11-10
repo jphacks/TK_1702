@@ -90,3 +90,19 @@ Lineなどのメッセンジャーアプリで知り合いに緊急を伝える�
     * 検索にはMySQLの地理空間データ用の検索システム(GIS)を用いた
 * 投稿された動画をLINEに投稿するためのユーザーインビテーションシステムの作り込みにも苦労した
     * APIとしては整備されているが、LINEを介さないユーザーの動作に応じて投稿を行う既存サービスが少ないため、今回の要件にぴったり当てはまるユーザー同定の仕組みを試行錯誤で作り上げる必要があった
+
+
+## References
+
+### Bluetooth
+
+- https://blog.reinforce-lab.com/2013/09/19/blebook-ch3-corebluetooth/
+- https://qiita.com/shu223/items/f67f1b0fb1840cf0bd63#-%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9%E3%82%92%E6%8C%87%E5%AE%9A%E3%81%97%E3%81%A6%E3%81%84%E3%82%8B%E3%81%8B
+- https://stackoverflow.com/questions/34856329/not-getting-data-services-from-ble-device-in-ios
+- https://qiita.com/tomoya0x00/items/980126c2a7757095f41e
+- https://qiita.com/nave421m/items/639a7a043844acda4eff#8%E3%83%9A%E3%83%AA%E3%83%95%E3%82%A7%E3%83%A9%E3%83%AB%E3%81%A8%E3%81%AE%E6%8E%A5%E7%B6%9A%E7%B5%90%E6%9E%9C%E3%82%92%E5%8F%96%E5%BE%97
+
+### Local Notification
+
+- https://developer.apple.com/jp/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/SchedulingandHandlingLocalNotifications.html#//apple_ref/doc/uid/TP40008194-CH5-SW1
+
