@@ -66,16 +66,21 @@ $app->group('/video', function () {
 			$video_uri = Constants::getUrlBase() . '/' . Constants::getStaticBasePath() . '/video/' . $basename . '.mp4';
 			$thumb_uri = Constants::getUrlBase() . '/' . Constants::getStaticBasePath() . '/thumb/' . $basename . '.jpg';
 			\SlashApp\LoggerProvider::getLogger('hoge')->debug($video_uri);
+
+			/** @var \ORM\LocationHistory $locationHistory */
+			$locationHistory = \ORM\LocationHistoryQuery::create()
+				->filterByUserId($user_id)
+				->withLatLong()
+				->orderByCreatedAt(Criteria::DESC)
+				->findOne();
+
 			$video = new \ORM\Video();
 			$video->setOwnerId($user_id)
 				->setFileName($basename . '.mp4')
 				->setThumbName($basename . '.jpg')
+				->setLocation($locationHistory->getLocation())
 				->save();
 
-			$locationHistory = \ORM\LocationHistoryQuery::create()
-				->orderByCreatedAt(Criteria::DESC)
-				->withLatLong()
-				->findOneByUserId($user_id);
 
 
 			$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(Constants::getLineToken());
@@ -100,7 +105,8 @@ $app->group('/video', function () {
 
 			return JsonRenderer::create()->render($response, ['status' => 'ok']);
 		} else {
-			return JsonRenderer::create()->renderAsError($response, 'Upload Failure', 400);
+			return JsonRenderer::create()->renderAsError($response, 'Upload Failure: ' . $uploadedFile->getError(),
+				400);
 		}
 	});
 
@@ -109,6 +115,7 @@ $app->group('/video', function () {
 		$user_id = $user->getUserId();
 		$videos = \ORM\VideoQuery::create()
 			->filterByOwnerId($user_id)
+			->withLatLong()
 			->find();
 		return JsonRenderer::create()->render($response, format_as_api($videos));
 	});
@@ -118,9 +125,9 @@ $app->group('/video', function () {
 	    $body = $request->getParsedBody();
         	$video_id = $body['id'] ?? null;
 		$user_id = $user->getUserId();
-		$videos = \ORM\VideoQuery::create()
+		\ORM\VideoQuery::create()
 			->filterByOwnerId($user_id)
-			->filterById($video_id)
+			->filterByVideoId($video_id)
             ->delete();
         return JsonRenderer::create()->render($response, ['status' => 'ok']);
     });
