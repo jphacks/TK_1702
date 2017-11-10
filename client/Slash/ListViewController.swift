@@ -75,6 +75,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView:UITableView, numberOfRowsInSection section:Int) -> Int {
         return videos.count
     }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
+    }
+    
     @IBAction func pushLineButton(_ sender: Any) {
         let alertController = UIAlertController(title: "Line連携します", message: "totem", preferredStyle: .alert)
         
