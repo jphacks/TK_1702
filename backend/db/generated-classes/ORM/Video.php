@@ -29,7 +29,7 @@ class Video extends BaseVideo
 			$matched_area = AreaQuery::create()
 				->where(GeometryType::mbrContainsWhereClause($lat, $long, 'Area.AreaPolygon'))
 				->findOne();
-			if ($friendly_name) {
+			if ($matched_area) {
 				$friendly_name = $matched_area->getFriendlyName();
 			}
 		}
@@ -40,7 +40,7 @@ class Video extends BaseVideo
 			"file_name" => Constants::getStaticBasePath() . '/video/' . $this->getFileName(),
 			"thumb_name" => Constants::getStaticBasePath() . '/thumb/' . $this->getThumbName(),
 			"latitude" => $lat,
-			"long" => $long,
+			"longitude" => $long,
 			"location" => $friendly_name,
 		];
 	}
