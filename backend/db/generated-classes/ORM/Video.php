@@ -37,8 +37,8 @@ class Video extends BaseVideo
 		return [
 			"created_at" => $this->getCreatedAt()->getTimestamp(),
 			"owner_id" => $this->getOwnerId(),
-			"file_name" => Constants::getStaticBasePath() . '/video/' . $this->getFileName(),
-			"thumb_name" => Constants::getStaticBasePath() . '/thumb/' . $this->getThumbName(),
+			"file_name" => Constants::getUrlBase() . Constants::getStaticBasePath() . '/video/' . $this->getFileName(),
+			"thumb_name" => Constants::getUrlBase() . Constants::getStaticBasePath() . '/thumb/' . $this->getThumbName(),
 			"latitude" => $lat,
 			"longitude" => $long,
 			"location" => $friendly_name,
