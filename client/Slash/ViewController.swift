@@ -12,8 +12,9 @@ import AssetsLibrary
 import CoreLocation
 import Alamofire
 import UserNotifications
+import CoreBluetooth
 
-class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CLLocationManagerDelegate {
+class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CLLocationManagerDelegate, CBCentralManagerDelegate, CBPeripheralDelegate {
     let captureSession = AVCaptureSession()
     let videoDevice = AVCaptureDevice.default(for: AVMediaType.video)
     let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)
@@ -48,9 +49,20 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
     @IBOutlet weak var stopButton: UIButton!
     
     var isRecording = false
+    
+    var notificationCenter : UNUserNotificationCenter?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.centralManager = CBCentralManager(delegate: self, queue: nil)
+        
+        self.notificationCenter = UNUserNotificationCenter.current()
+        self.notificationCenter?.requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
+            print(error ?? "");
+        }
+        
+//        self.notifyAlertPushed()
         
         self.setupStyles()
         
@@ -128,10 +140,16 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         self.flashEnable = false
     }
     
+    var lastLocation : CLLocation?
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print("Update location")
         
         if let location = locations.last {
+            self.connectToKnownPeripheral();
+            
+            self.lastLocation = location
+            
             self.request.postLocation(
                 latitude: location.coordinate.latitude,
                 longitude: location.coordinate.longitude
@@ -151,12 +169,12 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         print("didFinishRecordingTo: \(outputFileURL)")
 
-        let data = try! Data(contentsOf: outputFileURL, options: [])
-        self.request.postVideo(data: data, completion: {
-
-        })
+        // TODO: Debugging!
+//        let data = try! Data(contentsOf: outputFileURL, options: [])
+//        self.request.postVideo(data: data, completion: {
+//        })
     }
-    
+
     @objc func toggleFlash(flg: Bool) {
         if self.avDevice!.hasTorch {
             do {
@@ -170,6 +188,123 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
             }
         } else {
             print("Torch is not available")
+        }
+    }
+    
+    var peripherals: [CBPeripheral] = []
+    var centralManager: CBCentralManager? = nil
+    
+    let serviceUUID = CBUUID.init(string: "4FAFC201-1FB5-459E-8FCC-C5C9C331914B")
+    let deviceIdentifier = UUID(uuidString: "B7183C66-4223-D143-8BC4-9BDEA5C0FC14")!
+
+    func scanBLEDevice() {
+//        self.centralManager?.scanForPeripherals(withServices: [ serviceUUID ], options: nil)
+        self.centralManager?.scanForPeripherals(withServices: nil, options: nil)
+    }
+    
+    func stopScanForBLEDevice() {
+        centralManager?.stopScan()
+        print("scan stopped")
+    }
+    
+    func connectToKnownPeripheral() {
+        if !self.centralManagerReady { return }
+        
+        guard let peripherals = self.centralManager?.retrievePeripherals(withIdentifiers: [ deviceIdentifier ]) else { return }
+        
+        for peripheral in peripherals {
+            self.peripheral = peripheral
+            self.peripheral!.delegate = self
+            self.centralManager!.connect(self.peripheral!, options: nil)
+        }
+    }
+    
+    let BLE_DEVICE_NAME = "MyESP32"
+    var peripheral : CBPeripheral?
+    var centralManagerReady = false
+    
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        print("CBCentraolManager state: \(central.state)")
+        
+        switch central.state {
+        case .poweredOn:
+            self.centralManagerReady = true
+//            self.scanBLEDevice()
+            // なんかdidUpdateLocationsでやらないと動かない
+//            self.connectToKnownPeripheral()
+            break
+        default:
+            break
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        if (peripheral.name == self.BLE_DEVICE_NAME) {
+            print("Try to connect \(peripheral.name ?? "")")
+            
+            self.peripheral = peripheral
+            self.peripheral!.delegate = self
+            self.centralManager!.connect(self.peripheral!, options: nil)
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        print("Connected to " + peripheral.name!)
+
+        self.notifyAlertPushed()
+
+        peripheral.discoverServices(nil)
+    }
+    
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        print("Bluetooth connect failed: \(error!)")
+    }
+    
+//    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+//        print("Find services")
+//
+//        guard let services = peripheral.services else { print("Invalid services"); return }
+//
+//        for service in services {
+//            if service.uuid == serviceUUID {
+//                peripheral.discoverCharacteristics(nil, for: service)
+//            }
+//        }
+//    }
+//
+//    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+//        print("peripheral:\(peripheral) and service:\(service)")
+//
+//        for characteristic in service.characteristics! {
+//            self.notifyAlertPushed()
+//        }
+//    }
+    
+    func notifyAlertPushed() {
+        print(#function)
+        
+        let content = UNMutableNotificationContent()
+        
+        content.title = "LINEグループにSOSを発信しました"
+        content.body = "少しでも怪しい人がいたら今すぐ110番通報"
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
+        let request = UNNotificationRequest(identifier: "sos-notification", content: content, trigger: trigger)
+        
+        let center = UNUserNotificationCenter.current()
+        center.add(request) { (error : Error?) in
+            if error != nil {
+                print("残念！SOSに失敗しました！")
+            }
+        }
+    }
+    
+    func sendSos() {
+        if let location = lastLocation {
+            self.request.postSos(
+                latitude: location.coordinate.latitude,
+                longitude: location.coordinate.longitude
+            )
         }
     }
 }

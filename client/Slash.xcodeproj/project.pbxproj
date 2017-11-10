@@ -13,6 +13,8 @@
 		4648FA931FA462ED00A3E6D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4648FA911FA462ED00A3E6D3 /* Main.storyboard */; };
 		4648FA951FA462ED00A3E6D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4648FA941FA462ED00A3E6D3 /* Assets.xcassets */; };
 		4648FA981FA462ED00A3E6D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4648FA961FA462ED00A3E6D3 /* LaunchScreen.storyboard */; };
+		4676860C1FB5AAD000361E22 /* ViewController+ CBCentralManagerDelegate+ CBPeripheralDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4676860B1FB5AAD000361E22 /* ViewController+ CBCentralManagerDelegate+ CBPeripheralDelegate.swift */; };
+		4676860E1FB5C16A00361E22 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4676860D1FB5C15900361E22 /* CoreBluetooth.framework */; };
 		46DFCE381FA4BBC800D2C67D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 46DFCE371FA4BBC800D2C67D /* GoogleService-Info.plist */; };
 		46DFCE3A1FA4EBA000D2C67D /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DFCE391FA4EBA000D2C67D /* Request.swift */; };
 		46DFCE3C1FA4F8E500D2C67D /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DFCE3B1FA4F8E500D2C67D /* Video.swift */; };
@@ -30,6 +32,8 @@
 		4648FA941FA462ED00A3E6D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4648FA971FA462ED00A3E6D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4648FA991FA462ED00A3E6D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4676860B1FB5AAD000361E22 /* ViewController+ CBCentralManagerDelegate+ CBPeripheralDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+ CBCentralManagerDelegate+ CBPeripheralDelegate.swift"; sourceTree = "<group>"; };
+		4676860D1FB5C15900361E22 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		46DFCE361FA4BA6C00D2C67D /* Slash.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Slash.entitlements; sourceTree = "<group>"; };
 		46DFCE371FA4BBC800D2C67D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		46DFCE391FA4EBA000D2C67D /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
@@ -44,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4676860E1FB5C16A00361E22 /* CoreBluetooth.framework in Frameworks */,
 				CFD55B893782F28F14CF0888 /* Pods_Slash.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,6 +59,7 @@
 		08216256ED9981D596826EC9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4676860D1FB5C15900361E22 /* CoreBluetooth.framework */,
 				6527675E033F25DA50955035 /* Pods_Slash.framework */,
 			);
 			name = Frameworks;
@@ -92,6 +98,7 @@
 				46DFCE371FA4BBC800D2C67D /* GoogleService-Info.plist */,
 				46DFCE391FA4EBA000D2C67D /* Request.swift */,
 				46DFCE3B1FA4F8E500D2C67D /* Video.swift */,
+				4676860B1FB5AAD000361E22 /* ViewController+ CBCentralManagerDelegate+ CBPeripheralDelegate.swift */,
 			);
 			path = Slash;
 			sourceTree = "<group>";
@@ -240,6 +247,7 @@
 				4648FA901FA462ED00A3E6D3 /* ViewController.swift in Sources */,
 				46DFCE3C1FA4F8E500D2C67D /* Video.swift in Sources */,
 				4648FA8E1FA462ED00A3E6D3 /* AppDelegate.swift in Sources */,
+				4676860C1FB5AAD000361E22 /* ViewController+ CBCentralManagerDelegate+ CBPeripheralDelegate.swift in Sources */,
 				46DFCE3A1FA4EBA000D2C67D /* Request.swift in Sources */,
 				C53CBC9C1FA4D9C500093953 /* CustomTableViewCell.swift in Sources */,
 				464679541FA49EF400048685 /* ListViewController.swift in Sources */,

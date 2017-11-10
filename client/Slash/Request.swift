@@ -110,6 +110,19 @@ class Request {
         }
     }
     
+    static let SOS_PATH = "\(URL_BASE)/sos"
+    
+    func postSos(latitude : Double, longitude : Double) {
+        print(#function)
+        
+        let parameters = [ "latitude": latitude, "longitude": longitude ]
+        
+        Alamofire.request(Request.SOS_PATH, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers).responseJSON { response in
+            print("postLocation Status: \(String(describing: response.response?.statusCode))")
+            print("Error: \(String(describing: response.error))")
+        }
+    }
+    
 //    guard let object = response.result.value else {    return }
 //    let json = JSON(object)
 //    guard let full_text = json["responses"][0]["textAnnotations"][0]["description"].string else { return }

@@ -23,9 +23,10 @@ class CustomTableViewCell: UITableViewCell {
     
     func setCell(video: Video) {
         let url = URL(string: video.thumbnail)
-        let data = try? Data(contentsOf: url!)
+        if let data = try? Data(contentsOf: url!) {
+            tableImageView.image = UIImage(data: data)
+        }
         
-        tableImageView.image = UIImage(data: data!)
         tablePlaceLabel.text = video.place
         tableTimeLabel.text = self.convertUnixTimeToStringDate(unixtime: video.created_at)
     }
