@@ -103,6 +103,17 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rcL-W5-pb6">
+                                        <rect key="frame" x="296" y="15" width="46" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <state key="normal" title="Button">
+                                            <color key="titleColor" red="0.69803921570000005" green="0.0039215686269999999" blue="0.36078431370000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="pushLineButton:" destination="T7R-d1-V1g" eventType="touchUpInside" id="2l5-ST-Qda"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.69803921570000005" green="0.0039215686269999999" blue="0.36078431370000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -195,6 +206,7 @@
                         <viewLayoutGuide key="safeArea" id="Bq3-Y9-Rel"/>
                     </view>
                     <connections>
+                        <outlet property="lineButton" destination="rcL-W5-pb6" id="c1W-zG-ovM"/>
                         <outlet property="startButton" destination="GOx-fO-7i4" id="lJ7-Fy-ooc"/>
                         <outlet property="tableView" destination="j9x-7H-aXp" id="SZN-vA-eBM"/>
                     </connections>

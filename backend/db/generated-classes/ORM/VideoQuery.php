@@ -3,6 +3,7 @@
 namespace ORM;
 
 use ORM\Base\VideoQuery as BaseVideoQuery;
+use SlashApp\Propel\LatLongTrait;
 
 /**
  * Skeleton subclass for performing query and update operations on the 'video' table.
@@ -16,5 +17,10 @@ use ORM\Base\VideoQuery as BaseVideoQuery;
  */
 class VideoQuery extends BaseVideoQuery
 {
+	use LatLongTrait;
 
+	protected function getGeometryColumnName(): string
+	{
+		return 'Video.Location';
+	}
 }

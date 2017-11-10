@@ -10,4 +10,5 @@
 /db/generated-sql/
 /generated-api-schema/
 /node_modules/
+/static/
 /vendor/
