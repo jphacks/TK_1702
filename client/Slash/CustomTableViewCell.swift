@@ -19,29 +19,13 @@ class CustomTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
-    
-//    func setCell(imageName: String, titleText: String, descriptionText: String) {
-//        tableImageView.image = UIImage(named: imageName)
-//        tablePlaceLabel.text = titleText
-//        tableTimeLabel.text = descriptionText
-//    }
-    
-//    func setCell(string: String, titleText: String, descriptionText: String) {
-//        guard let url = URL(string: string) else { print("CustomTableViewCell#setCell Failed"); return }
-//        guard let data = try? Data(contentsOf: url) else { print("CustomTableViewCell#setCell Failed"); return }
-//
-//        tableImageView = UIImageView(image: UIImage(data: data))
-//    }
     
     func setCell(video: Video) {
         let url = URL(string: video.thumbnail)
         let data = try? Data(contentsOf: url!)
         
-        tableImageView = UIImageView(image: UIImage(data: data!))
-        
+        tableImageView.image = UIImage(data: data!)
         tablePlaceLabel.text = video.place
         tableTimeLabel.text = self.convertUnixTimeToStringDate(unixtime: video.created_at)
     }

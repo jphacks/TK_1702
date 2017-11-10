@@ -30,6 +30,7 @@ class Request {
     static let LOCATIONS_PATH = "\(URL_BASE)/location"
     
     func postLocation(latitude : Double, longitude : Double) {
+        print(#function)
         // MEMO: https://qiita.com/Chan_moro/items/a1aa89acf2b1d21f9498
         
         let parameters = [ "latitude": latitude, "longitude": longitude ]
@@ -44,6 +45,7 @@ class Request {
     
     // MEMO: Output file is too large!
     func postVideo(data : Data, completion : @escaping () -> Void) {
+        print(#function)
         // MEMO: https://github.com/Alamofire/Alamofire#uploading-data-to-a-server
         
         Alamofire.upload(
@@ -74,6 +76,8 @@ class Request {
     }
     
     func getVideo(completion : @escaping ([ Video ]) -> Void) {
+        print(#function)
+        
         Alamofire.request(Request.VIDEO_PATH, method: .get, encoding: JSONEncoding.default, headers: [ "X-UDID" : self.deviceId ]).responseJSON { response in
             print("getVideo Status: \(String(describing: response.response?.statusCode))")
             
@@ -86,7 +90,7 @@ class Request {
                     created_at: $0["created_at"].intValue,
                     video_file: $0["file_name"].string!,
                     thumbnail: $0["thumb_name"].string!,
-                    place: $0["place"].string!
+                    place: $0["location"].string!
                 )
             }
             
@@ -97,6 +101,8 @@ class Request {
     static let FCM_PATH = "\(URL_BASE)/fcm"
     
     func postFCM(fcmToken : String) {
+        print(#function)
+
         let parameters = [ "token" : fcmToken ]
         
         Alamofire.request(Request.FCM_PATH, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: [ "X-UDID" : self.deviceId ]).responseJSON { response in

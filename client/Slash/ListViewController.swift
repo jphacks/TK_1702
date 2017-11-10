@@ -46,11 +46,12 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @objc func refresh() {
         self.refreshControl.endRefreshing()
+        self.fetchVideo()
         self.tableView.reloadData()
     }
     
     func fetchVideo() {
-        request.getVideo { self.videos = $0 }
+        request.getVideo { self.videos = $0.reversed() }
 
         self.tableView.reloadData()
     }
