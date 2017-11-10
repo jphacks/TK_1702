@@ -118,9 +118,9 @@ $app->group('/video', function () {
 	    $body = $request->getParsedBody();
         	$video_id = $body['id'] ?? null;
 		$user_id = $user->getUserId();
-		$videos = \ORM\VideoQuery::create()
+		\ORM\VideoQuery::create()
 			->filterByOwnerId($user_id)
-			->filterById($video_id)
+			->filterByVideoId($video_id)
             ->delete();
         return JsonRenderer::create()->render($response, ['status' => 'ok']);
     });
