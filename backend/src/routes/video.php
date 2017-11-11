@@ -82,6 +82,7 @@ $app->group('/video', function () {
 				->save();
 
 
+            $lineId = $user->getLineId() ?? Constants::getLineReceiverId();
 
 			$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(Constants::getLineToken());
 			$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => Constants::getLineChannelSecret()]);
@@ -93,14 +94,14 @@ $app->group('/video', function () {
 			    $locationHistory->getLongitude()
 			);
 
-			$bot->pushMessage(Constants::getLineReceiverId(), $locationMessageBuilder);
+			$bot->pushMessage($lineId, $locationMessageBuilder);
 //
 
 			$videoMessageBuilder = new \LINE\LINEBot\MessageBuilder\VideoMessageBuilder(
 				$video_uri,
 				$thumb_uri
 			);
-			$bot->pushMessage(Constants::getLineReceiverId(), $videoMessageBuilder);
+			$bot->pushMessage($lineId, $videoMessageBuilder);
 
 
 			return JsonRenderer::create()->render($response, ['status' => 'ok']);
