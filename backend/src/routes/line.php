@@ -10,7 +10,7 @@ $app->post('/line', function (ServerRequestInterface $request, ResponseInterface
     $data = $request->getParsedBody();
 
     $groupId = $data['events'][0]['source']['groupId'] ?? null;
-    $message = $data['events'][0]['message']['text'} ?? null;
+    $message = $data['events'][0]['message']['text'] ?? null;
     if($groupId) {
         file_put_contents("ids", $groupId);
     }
