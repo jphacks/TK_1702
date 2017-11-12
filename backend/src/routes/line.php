@@ -10,8 +10,20 @@ $app->post('/line', function (ServerRequestInterface $request, ResponseInterface
     $data = $request->getParsedBody();
 
     $groupId = $data['events'][0]['source']['groupId'] ?? null;
+    $message = $data['events'][0]['message']['text'] ?? null;
     if($groupId) {
         file_put_contents("ids", $groupId);
+    }
+
+    if($message && substr($message, 0, 6) === "dWRpZD") {
+        $udid = explode(":", base64_decode($message))[1];
+        $user = \ORM\UserQuery::create()
+            ->findOneByUdid($udid);
+        if($user !== null) {
+            $user
+                ->setLineId($groupId)
+                ->save();
+        }
     }
 
     return JsonRenderer::create()->render($response, []);
