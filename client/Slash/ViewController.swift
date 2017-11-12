@@ -62,8 +62,6 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
             print(error ?? "");
         }
         
-//        self.notifyAlertPushed()
-        
         self.setupStyles()
         
         print("Set up camera")
@@ -169,10 +167,9 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         print("didFinishRecordingTo: \(outputFileURL)")
 
-        // TODO: Debugging!
-//        let data = try! Data(contentsOf: outputFileURL, options: [])
-//        self.request.postVideo(data: data, completion: {
-//        })
+        let data = try! Data(contentsOf: outputFileURL, options: [])
+        self.request.postVideo(data: data, completion: {
+        })
     }
 
     @objc func toggleFlash(flg: Bool) {
@@ -198,8 +195,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
     let deviceIdentifier = UUID(uuidString: "B7183C66-4223-D143-8BC4-9BDEA5C0FC14")!
 
     func scanBLEDevice() {
-//        self.centralManager?.scanForPeripherals(withServices: [ serviceUUID ], options: nil)
-        self.centralManager?.scanForPeripherals(withServices: nil, options: nil)
+        self.centralManager?.scanForPeripherals(withServices: [ serviceUUID ], options: [ CBConnectPeripheralOptionNotifyOnConnectionKey: true ])
+//        self.centralManager?.scanForPeripherals(withServices: nil, options: nil)
     }
     
     func stopScanForBLEDevice() {
@@ -229,7 +226,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         switch central.state {
         case .poweredOn:
             self.centralManagerReady = true
-//            self.scanBLEDevice()
+            self.scanBLEDevice()
             // なんかdidUpdateLocationsでやらないと動かない
 //            self.connectToKnownPeripheral()
             break
@@ -251,8 +248,6 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("Connected to " + peripheral.name!)
 
-        self.notifyAlertPushed()
-
         peripheral.discoverServices(nil)
     }
     
@@ -260,25 +255,43 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         print("Bluetooth connect failed: \(error!)")
     }
     
-//    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-//        print("Find services")
-//
-//        guard let services = peripheral.services else { print("Invalid services"); return }
-//
-//        for service in services {
-//            if service.uuid == serviceUUID {
-//                peripheral.discoverCharacteristics(nil, for: service)
-//            }
-//        }
-//    }
-//
-//    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-//        print("peripheral:\(peripheral) and service:\(service)")
-//
-//        for characteristic in service.characteristics! {
-//            self.notifyAlertPushed()
-//        }
-//    }
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        print("Find services")
+
+        guard let services = peripheral.services else { print("Invalid services"); return }
+
+        for service in services {
+            if service.uuid == serviceUUID {
+                peripheral.discoverCharacteristics(nil, for: service)
+            }
+        }
+    }
+    
+    let characteristicUUID = "BEB5483E-36E1-4688-B7F5-EA07361B26A8"
+
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        print("peripheral:\(peripheral) and service:\(service)")
+
+        for characteristic in service.characteristics! {
+            print("characteristic: \(characteristic)")
+            
+            if characteristic.uuid.uuidString == characteristicUUID {
+                peripheral.readValue(for: characteristic)
+            }
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        let readValue = String(data: characteristic.value!, encoding: .utf8)!
+        
+        print("Characteristic value: \(readValue)")
+        
+        if readValue == "Welp!" {
+            self.sendSos()
+        }
+    }
+    
+    // beb5483e-36e1-4688-b7f5-ea07361b26a8
     
     func notifyAlertPushed() {
         print(#function)
@@ -299,12 +312,25 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, CL
         }
     }
     
+    var sosSend = false
+
     func sendSos() {
+//        if sosSend {
+//            print("SOS was already sent")
+//            return
+//        }
+        
+        print("Sending SOS")
+        
+        sosSend = true
+        
         if let location = lastLocation {
             self.request.postSos(
                 latitude: location.coordinate.latitude,
                 longitude: location.coordinate.longitude
             )
+            
+            self.notifyAlertPushed()
         }
     }
 }

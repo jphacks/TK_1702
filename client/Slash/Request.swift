@@ -64,7 +64,7 @@ class Request {
                 case .success(let upload, _, _):
                     upload
                         .uploadProgress(closure: { (progress) in
-                            print("Upload Progress: \(progress.fractionCompleted)")
+//                            print("Upload Progress: \(progress.fractionCompleted)")
                         })
                         .responseString { response in
                             debugPrint(response)

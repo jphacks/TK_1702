@@ -81,7 +81,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     @IBAction func pushLineButton(_ sender: Any) {
-        let alertController = UIAlertController(title: "Line連携します", message: "totem", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Line連携します", message: "Migaを友達に登録して「0c21e1bc7b03cecdb347242b0ef09f11558ce0f4e5c37c80e5b05ed0ff63e187」を送信してください", preferredStyle: .alert)
         
         let otherAction = UIAlertAction(title: "はい", style: .default) {
             action in NSLog("はいボタンが押されました")

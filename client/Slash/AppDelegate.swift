@@ -84,6 +84,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         print("Notification called")
-        completionHandler(UNNotificationPresentationOptions.sound)
+        
+        if notification.request.identifier == "FAC12B16-AE9F-48FC-9118-8E1B0BD212CE" {
+            let alertController = UIAlertController(title: "SOSが送信されました", message: "", preferredStyle: .alert)
+            
+            let otherAction = UIAlertAction(title: "はい", style: .default) {
+                action in NSLog("はいボタンが押されました")
+            }
+
+            alertController.addAction(otherAction)
+            
+            window?.rootViewController?.present(alertController, animated: true, completion: nil)
+
+            completionHandler(UNNotificationPresentationOptions.sound)
+        }
     }
 }
